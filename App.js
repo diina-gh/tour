@@ -3,6 +3,9 @@ import { Text, View } from 'react-native';
 import { TailwindProvider } from 'tailwindcss-react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MainStackNavigator } from './components/navigation/StackNavigator';
+import BottomTabNavigator from './components/navigation/TabNavigator';
 import Ionicons from  '@expo/vector-icons/Ionicons';
 import Home from './pages/Home';
 import Maps from './pages/Maps';
@@ -14,7 +17,12 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <TailwindProvider>
-          <NavigationContainer>
+
+      <NavigationContainer>
+        <BottomTabNavigator />
+      </NavigationContainer>
+
+          {/* <NavigationContainer>
             <Tab.Navigator 
               screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
@@ -44,7 +52,17 @@ export default function App() {
               <Tab.Screen name="Profil" component={Profil} options={{ tabBarLabel: 'Profil' }} />
 
           </Tab.Navigator>
-          </NavigationContainer>
+          </NavigationContainer> */}
     </TailwindProvider>
+  );
+}
+
+
+function headerComponent() {
+  return (
+    <View className="w-full flex flex-row justify-between items-center h-11 bg-red-300">
+      <View className="w-8 h-8 rounded-md bg-purple-500"></View>
+      <View className="w-8 h-8 rounded-md bg-gray-500"></View>
+    </View>
   );
 }
