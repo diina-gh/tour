@@ -21,6 +21,8 @@ import SodaIcon from '../ui/icons/sodaIcon';
 import SodaBoldIcon from '../ui/icons/sodaBoldIcon';
 import UserIcon from '../ui/icons/userIcon';
 import UserBoldIcon from '../ui/icons/userBoldIcon';
+import CameraIcon from '../ui/icons/cameraIcon';
+import CameraBoldIcon from '../ui/icons/cameraBoldIcon';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -47,9 +49,9 @@ export default function TabNavigation() {
           if(focused) return <BuildingBoldIcon size={size} color={color} />;
           else return <BuildingIcon size={size} color={color} />;
         } 
-        else if (route.name === 'Restos') {
-          if(focused) return <SodaBoldIcon size={size} color={color} />;
-          else return <SodaIcon size={size} color={color} />;
+        else if (route.name === 'Events') {
+          if(focused) return <CameraBoldIcon size={size} color={color} />;
+          else return <CameraIcon size={size} color={color} />;
         } 
         else if (route.name === 'Favoris') {
           if(focused) return <HeartIcon size={size} color={color} />;
@@ -69,8 +71,8 @@ export default function TabNavigation() {
     })}
   >
     <Tab.Screen name="Home" component={Home} />
+    <Tab.Screen name="Events" component={Events} />
     <Tab.Screen name="Hotels" component={Hotels} />
-    <Tab.Screen name="Restos" component={Restos} />
     {/* <Tab.Screen name="Favoris" component={Favoris} /> */}
     <Tab.Screen name="Profil" component={Profil} />
   </Tab.Navigator>
