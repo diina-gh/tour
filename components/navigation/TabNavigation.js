@@ -8,9 +8,9 @@ import Home from '../../pages/Home';
 import Favoris from '../../pages/Favoris';
 import Maps from '../../pages/Maps';
 import Profil from '../../pages/Profil';
-import Hotels from '../../pages/Hotels';
-import Events from '../../pages/Events';
-import Restos from '../../pages/Restos';
+import Hotels from '../../pages/Hotels/index';
+import Events from '../../pages/Events/index';
+import Restos from '../../pages/Restos/index';
 
 import HeartIcon from "../ui/icons/heartIcon";
 import HomeIcon from '../ui/icons/homeIcon';
@@ -53,9 +53,9 @@ export default function TabNavigation() {
           if(focused) return <CameraBoldIcon size={size} color={color} />;
           else return <CameraIcon size={size} color={color} />;
         } 
-        else if (route.name === 'Favoris') {
-          if(focused) return <HeartIcon size={size} color={color} />;
-          else return <HeartIcon size={size} color={color} />;
+        else if (route.name === 'Restos') {
+          if(focused) return <SodaBoldIcon size={size} color={color} />;
+          else return <SodaIcon size={size} color={color} />;
         } 
         else if (route.name === 'Profil') {
           if(focused) return <UserBoldIcon size={size} color={color} />;
@@ -71,9 +71,9 @@ export default function TabNavigation() {
     })}
   >
     <Tab.Screen name="Home" component={Home} />
-    <Tab.Screen name="Events" component={Events} />
     <Tab.Screen name="Hotels" component={Hotels} />
-    {/* <Tab.Screen name="Favoris" component={Favoris} /> */}
+    <Tab.Screen name="Events" component={Events} />
+    <Tab.Screen name="Restos" component={Restos} />
     <Tab.Screen name="Profil" component={Profil} />
   </Tab.Navigator>
   );

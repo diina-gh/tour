@@ -24,7 +24,8 @@ export default function Home({ route, navigation }) {
             <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-4 py-2.5 bg-[#fef9f6]">
 
                 <View className="w-full h-auto">
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full">
+            
+                    {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full">
 
                         <View className="w-[72px] flex flex-col mr-4">
                             <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
@@ -68,7 +69,10 @@ export default function Home({ route, navigation }) {
                         </View>
 
 
-                    </ScrollView>
+                    </ScrollView> */}
+
+                    <Text className="text-2xl text-gray-900 font-bold">Visitez les plus beaux endroits du Sénégal </Text>
+
                 </View>
 
                 <View className="w-full h-11 bg-[#f4f2ef] rounded-full shadow-inner border border-0.5 border-[#f0f0f0] flex flex-row justify-between px-2.5 py-1 mt-3">
@@ -89,26 +93,55 @@ export default function Home({ route, navigation }) {
                     </View>
                 </View>
 
-                <View className="w-full mt-2">
+                <View className="w-full mt-4">
+
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1">
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Tout</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-base font-medium font-mono">Musique</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Sport</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Education</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Culture</View>
+                    </ScrollView>
+
                     <Places />
+
                 </View>
 
                 <View className="w-full mt-2">
 
                     <View className="w-full flex flex-row justify-between">
                         <Text className="text-lg font-semibold self-center">Evènements à venir</Text>
-                        <Text className="text-base font-medium text-[#EDA47E] underline self-center">Voir+</Text>
+                        <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
+
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full mt-2 py-1">
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Tout</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Sport</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-base font-medium font-mono">Musique</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Education</View>
+                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Culture</View>
+                    </ScrollView>
 
                     <Events />
 
                 </View>
 
-                <View className="w-full mt-2">
+                <View className="w-full">
 
                     <View className="w-full flex flex-row justify-between">
                         <Text className="text-lg font-semibold self-center">Meilleurs hôtels</Text>
-                        <Text className="text-base font-medium text-[#EDA47E] underline self-center">Voir+</Text>
+                        <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
+                    </View>
+
+                    <Hotels />
+
+                </View>
+
+                <View className="w-full">
+
+                    <View className="w-full flex flex-row justify-between">
+                        <Text className="text-lg font-semibold self-center">Top des restaurants</Text>
+                        <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
                     <Hotels />
