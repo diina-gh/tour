@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 30,
     borderColor: '#f3f3f3',
-    elevation: 3,
+    elevation: 4,
   },
 
   itemImage: {

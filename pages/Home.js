@@ -4,7 +4,7 @@ import { Header } from '../components/commons/Header';
 import Styles from '../styles';
 import Places from '../components/sections/Places';
 import Events from '../components/sections/Events';
-import SearchIcon from '../components/ui/icons/searchIcon';
+import Hotels from '../components/sections/Hotels';
 
 export default function Home({ route, navigation }) {
 
@@ -24,7 +24,7 @@ export default function Home({ route, navigation }) {
             <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-4 py-2.5 bg-[#fef9f6]">
 
                 <View className="w-full h-auto">
-                    <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} className="w-full h-full">
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full">
 
                         <View className="w-[72px] flex flex-col mr-4">
                             <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
@@ -96,7 +96,7 @@ export default function Home({ route, navigation }) {
                 <View className="w-full mt-2">
 
                     <View className="w-full flex flex-row justify-between">
-                        <Text className="text-lg font-semibold self-center">Prochaines évènements</Text>
+                        <Text className="text-lg font-semibold self-center">Evènements à venir</Text>
                         <Text className="text-base font-medium text-[#EDA47E] underline self-center">Voir+</Text>
                     </View>
 
@@ -111,7 +111,7 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#EDA47E] underline self-center">Voir+</Text>
                     </View>
 
-                    <Places />
+                    <Hotels />
 
                 </View>
 
