@@ -5,13 +5,14 @@ import Styles from '../styles';
 import Places from '../components/sections/Places';
 import Events from '../components/sections/Events';
 import Hotels from '../components/sections/Hotels';
+import Restos from '../components/sections/Restos';
 
 export default function Home({ route, navigation }) {
 
     const [text, onChangeText] = React.useState("");
 
     return (
-        <View style={Styles.container} >
+        <View style={[Styles.container, styles.fontFamily]} >
 
             <Header
                 profil
@@ -71,7 +72,7 @@ export default function Home({ route, navigation }) {
 
                     </ScrollView> */}
 
-                    <Text className="text-2xl text-gray-900 font-bold">Visitez les plus beaux endroits du Sénégal </Text>
+                    <Text className="text-xl text-gray-900 font-bold">Visitez les plus beaux endroits du Sénégal </Text>
 
                 </View>
 
@@ -87,7 +88,7 @@ export default function Home({ route, navigation }) {
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
                             onChangeText={onChangeText}
-                            placeholder="Que cherchez vous ?"
+                            placeholder="Rechercher un site ..."
                             value={text}
                         />
                     </View>
@@ -96,11 +97,11 @@ export default function Home({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1">
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Tout</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-base font-medium font-mono">Musique</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Sport</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Education</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Culture</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</View>
                     </ScrollView>
 
                     <Places />
@@ -115,14 +116,14 @@ export default function Home({ route, navigation }) {
                     </View>
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full mt-2 py-1">
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Tout</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Sport</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-base font-medium font-mono">Musique</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Education</View>
-                        <View className="w-24 min-w-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium font-mono">Culture</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</View>
+                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</View>
                     </ScrollView>
 
-                    <Events />
+                    <Events navigation={navigation} />
 
                 </View>
 
@@ -133,7 +134,7 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
-                    <Hotels />
+                    <Hotels navigation={navigation} />
 
                 </View>
 
@@ -144,7 +145,7 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
-                    <Hotels />
+                    <Restos navigation={navigation} />
 
                 </View>
 
@@ -158,12 +159,8 @@ export default function Home({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    regionScroll: {
-        width: '100%',
-        height: '20px',
-        backgroundColor: 'pink',
+    fontFamily: {
+        fontFamily: 'lucida grande',
     },
-    searchBar:{
-        backgroundColor: '#FAE5D2',
-    }
+
 });

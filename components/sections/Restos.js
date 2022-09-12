@@ -21,33 +21,34 @@ const {width: windowWidth} = Dimensions.get('window');
 const data = [
     {
       id: 'item6',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/vue-des-piscines-lage.jpeg?alt=media&token=d7f9b82d-6760-4847-ab00-36ebd12bde03',
-      title: 'Hotel Riu Baobab',
+      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-michelle-riach-995743.jpg?alt=media&token=7476d0f9-067a-491a-b213-d940e22d2b06',
+      title: 'La Corvette',
       uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
     },
     {
       id: 'item2',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/33075123.jpeg?alt=media&token=9990eeb4-d38e-43a1-85a5-e85a145e5109',
-      title: 'Terrou-Bi',
+      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-kaboompics-com-6267.jpg?alt=media&token=b063a5aa-80f7-491f-acb9-91487f2c10b8',
+      title: "CAESAR'S",
       uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
     },
     {
       id: 'item3',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/55472295_-VmXnOnzPz1EYBje8D3onqo7Ey16KEp4TfHzqyXaRm0.jpeg?alt=media&token=f790f246-f132-47aa-9d2a-36942aabea2c',
-      title: 'Radisson Blu Hotel',
+      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-rachel-claire-6126975.jpg?alt=media&token=049ca9b2-5298-495d-8c85-6f82cb40f1db',
+      title: 'Le Kermel',
       uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
     },
     {
       id: 'item1',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/vue-des-piscines-lage.jpeg?alt=media&token=d7f9b82d-6760-4847-ab00-36ebd12bde03',
-      title: 'Pullman Dakar Teranga',
+      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ron-lach-8440065.jpg?alt=media&token=fbe7753d-e119-4e76-8314-7f84a633e925',
+      title: 'La Fourchette',
       uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
     },
   ];
 
 const ITEM_WIDTH = 0.7 * windowWidth;
 const SEPARATOR_WIDTH = 10;
-export default function Hotels(props) {
+
+export default function Restos(props) {
   const {style} = props;
   const carouselRef = useRef(null);
 
@@ -62,7 +63,7 @@ export default function Hotels(props) {
 
   function renderItem({item, index}) {
     return (
-      <Pressable activeOpacity={1} style={styles.item} onPress={() => props.navigation.navigate('DetailHotel', { name: 'Jane' })}  onFocus={() => {carouselRef.current.scrollToIndex(index);}}>
+      <Pressable activeOpacity={1} style={styles.item} onFocus={() => {carouselRef.current.scrollToIndex(index);}}>
 
         <Image  style={styles.itemImage} source={{uri: item?.image}} />
 
@@ -75,7 +76,7 @@ export default function Hotels(props) {
                     </svg>
                     <Text style={styles.locationDesc}>Dakar, Senegal</Text>
                 </View>
-                <Text style={styles.itemName}>{item.title}</Text>
+                <Text style={styles.itemName}>{item?.title}</Text>
             </View>
             <View style={styles.itemStars}>
                 <Text style={styles.starsNumber}>4/5</Text>

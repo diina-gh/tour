@@ -1,16 +1,15 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Colors } from '../../utils/colors';
 
 import Home from '../../pages/Home';
 import Favoris from '../../pages/Favoris';
 import Maps from '../../pages/Maps';
 import Profil from '../../pages/Profil';
-import Hotels from '../../pages/Hotels/index';
-import Events from '../../pages/Events/index';
-import Restos from '../../pages/Restos/index';
+import ListHotel from '../../pages/Hotels/listHotel';
+import ListEvent from '../../pages/Events/listEvent';
+import ListResto from '../../pages/Restos/listResto';
 
 import HeartIcon from "../ui/icons/heartIcon";
 import HomeIcon from '../ui/icons/homeIcon';
@@ -45,15 +44,15 @@ export default function TabNavigation() {
           if(focused) return <HomeBoldIcon size={size} color={color} />;
           else return <HomeIcon size={size} color={color} />;
         } 
-        else if (route.name === 'Hotels') {
+        else if (route.name === 'ListHotel') {
           if(focused) return <BuildingBoldIcon size={size} color={color} />;
           else return <BuildingIcon size={size} color={color} />;
         } 
-        else if (route.name === 'Events') {
+        else if (route.name === 'ListEvent') {
           if(focused) return <CameraBoldIcon size={size} color={color} />;
           else return <CameraIcon size={size} color={color} />;
         } 
-        else if (route.name === 'Restos') {
+        else if (route.name === 'ListResto') {
           if(focused) return <SodaBoldIcon size={size} color={color} />;
           else return <SodaIcon size={size} color={color} />;
         } 
@@ -71,9 +70,9 @@ export default function TabNavigation() {
     })}
   >
     <Tab.Screen name="Home" component={Home} />
-    <Tab.Screen name="Hotels" component={Hotels} />
-    <Tab.Screen name="Events" component={Events} />
-    <Tab.Screen name="Restos" component={Restos} />
+    <Tab.Screen name="ListHotel" component={ListHotel} />
+    <Tab.Screen name="ListEvent" component={ListEvent} />
+    <Tab.Screen name="ListResto" component={ListResto} />
     <Tab.Screen name="Profil" component={Profil} />
   </Tab.Navigator>
   );

@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flexDirection: 'row',
         fontFamily: 'lucida grande',
-        backgroundColor: '#fcefe4'
 	},
 	view: {
 		marginHorizontal: 16,
