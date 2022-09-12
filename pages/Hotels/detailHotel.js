@@ -7,12 +7,11 @@ import Modal from "react-native-modalbox";
 
 const {width, height } = Dimensions.get("window");
 
-const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/concert2.webp?alt=media&token=257d9eea-199d-4a1e-99b7-0d6fc03264ab"
-const image2 = 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/la-lutte-senegalaise-1024x609.jpeg?alt=media&token=9a5678fe-0279-47ac-ae52-e1ddb16a42ab'
+const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-thorsten-technoman-338504.jpg?alt=media&token=4d92b49b-e524-407d-8697-9a2e45cdc8e7"
+const image2 = 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-pixabay-276671.jpg?alt=media&token=869bf7b1-8de1-44f1-aa98-396cd352efe4'
 
-const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-frank-k-1808975.jpg?alt=media&token=570fec41-144b-4729-996f-69d724c84e0d"
-const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-aviz-3531070.jpg?alt=media&token=2ab8f434-a7e8-4408-b863-907c0e5d7fcf"
-const image5 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ludmilla-diniz-3766344.jpg?alt=media&token=7d03b0aa-d4ac-44d5-9dd9-6ec4e60c9e07"
+const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-pixabay-261169.jpg?alt=media&token=2853439f-21f2-48d8-8b32-6d75536a6fb5"
+const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-kelly-2869215.jpg?alt=media&token=5a7135ad-c31b-4bc5-83e6-987cf9573124"
 
 
 export default function DetailHotel({navigation}) {
@@ -49,13 +48,7 @@ export default function DetailHotel({navigation}) {
                 
                 <Image className="w-full h-full object-cover" source={{uri: image1}} />
                 
-                <LinearGradient className="absolute top-0 left-0 w-full h-full" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
-                    
-                    <View className="absolute bottom-5 left-6" >
-                        <Text className="text-md text-gray-400 font-normal">CONCERT</Text>
-                        <Text className="text-xl text-white font-semibold">Concert de Mbalax</Text>
-                        <Text className="text-xs text-gray-200 font-light">Animé par Youssou Ndour</Text>
-                    </View>
+                <LinearGradient className="absolute top-0 left-0 w-full h-full" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.3)']} >
 
                     <Pressable onPress={() => navigation.dispatch(CommonActions.goBack())} activeOpacity={1} className="">
                         <View className="absolute top-5 left-4 flex flex-row justify-center w-10 h-10 bg-white/90 rounded-full shadow">
@@ -67,43 +60,66 @@ export default function DetailHotel({navigation}) {
                         </View>
                     </Pressable>
 
-                    <View className="bg-white/90 rounded-lg h-fit w-fit flex flex-col items-center px-[8px] py-1 absolute top-5 right-4">
-                        <Text className="text-[14.5px] font-semibold text-[#0b0b0b]">22</Text>
-                        <Text className="text-[12px] font-normal text-gray-500">Nov</Text>
+                    <View className="bg-white/90 rounded-2xl px-3 py-1.5 absolute top-5 right-4 w-fit flex flex-row" >
+                        <Text className="text-gray-800 text-sm font-semibold mr-1 self-center">4/5</Text>
+                        <View className="w-5 text-orange-300 self-center">
+                            <svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        </View>
+                    </View>
+
+                    <View className="absolute bottom-5 left-0 w-full flex flex-row justify-center" >
+
+                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg shadow-sm p-0.5 mr-4">
+                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image2}} />
+                        </View>
+
+                        <View className="w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg shadow-sm p-0.5 mr-4">
+                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image1}} />
+                        </View>
+
+                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm mr-4">
+                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image3}} />
+                        </View>
+
+                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm">
+                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image4}} />
+                        </View>
+
                     </View>
 
                 </LinearGradient>
 
             </View>
 
-            <View className="flex flex-row px-4 mt-4">
-                <View className="w-9 h-9 rounded-full bg-gray-400 bg-opacity-50 shadow border-2 border-[#0e0e0e] self-center">
-                    <Image className="w-full h-full rounded-full" source={{uri: image3}} />
+            <View className="w-full flex-col px-4 mt-4" >
+                <View className="flex flex-row">
+                    <View className="w-3 text-gray-400 mr-0.5 self-center">
+                        <svg className="w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </View>
+                    <Text className="text-gray-400 text-[14px] font-medium self-center">Dakar, Senegal</Text>
                 </View>
-                <View className="w-9 h-9 rounded-full bg-gray-400 bg-opacity-50 shadow border-2 border-[#0e0e0e] self-center -ml-4">
-                    <Image className="w-full h-full rounded-full" source={{uri: image4}} />
-                </View>
-                <View className="w-9 h-9 rounded-full bg-gray-400 bg-opacity-50 shadow border-2 border-[#0e0e0e] self-center -ml-4">
-                    <Image className="w-full h-full rounded-full" source={{uri: image5}} />
-                </View>
-                <View className="h-9 px-2 rounded-full bg-[#0b0b0b] shadow self-center flex flex-col justify-center -ml-5">
-                    <View className="w-full text-center text-sm text-white font-semibold   ">+2k participants</View>
-                </View>
+                <Text className="text-xl text-[#0b0b0b] font-semibold">Hotel Riu Baobab</Text>
             </View>
 
             <View className="w-full flex flex-row px-4 mt-4">
                 <View className="flex flex-col mr-5">
-                    <Text className="text-lg font-medium text-[#e16728]">Description</Text>
+                    <Text className="text-lg font-medium text-[#e16728] self-center">Description</Text>
                     <View className="w-20 h-[2px] bg-[#e16728] transition duration-700 ease-in-out mt-[1px] "></View>
                 </View>
-               
+                <View className="flex flex-col self-center mr-5">
+                    <Text className="text-lg font-medium text-gray-400">Reviews</Text>
+                    {/* <View className="w-20 h-[2px] bg-[#e16728] transition duration-700 ease-in-out mt-[1px] "></View> */}
+                </View>
             </View>
 
             <View className="px-4 mb-24">
 
                 <View className="flex flex-col mt-4">
                     <Text className="text-base text-gray-700 font-medium">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                        Situé au cœur d’une beauté naturelle exubérante, l’Hotel Riu Baobab est le lieu idéal pour passer des vacances inoubliables. Il dispose de plus de 500 chambres, spécialement aménagées pour vous offrir un maximum de confort et de bien-être. Et si vous souhaitez encore plus de confort, nous mettons à votre disposition les chambres swim-up réservées aux adultes avec piscine privée, qui vous permettront de vivre une expérience inoubliable en couple ou entre amis.
                     </Text>
                 </View>
 
@@ -141,7 +157,7 @@ export default function DetailHotel({navigation}) {
 
         <View className="w-full h-[80px] bg-[#fefaf9] shadow rounded-t-2xl absolute bottom-0 left-0 z-10 px-6 py-3">
             <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
-                <Text className="text-xl text-white font-semibold self-center">Participer</Text>
+                <Text className="text-xl text-white font-semibold self-center">Réserver</Text>
             </TouchableOpacity>
         </View>
 

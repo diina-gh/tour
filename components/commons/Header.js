@@ -72,7 +72,9 @@ export const Header = ({
 	return (
 		<Surface style={[styles.header, style, { backgroundColor: headerBg }]}>
 			<LeftView />
-			{/* <TitleView /> */}
+            {title && 
+              <TitleView />
+            }
 			{/* <RightView /> */}
 		</Surface>
 	)

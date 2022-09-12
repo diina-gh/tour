@@ -12,7 +12,7 @@ const {width: windowWidth} = Dimensions.get('window');
 const data = [
     {
       id: 'item6',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/vue-des-piscines-lage.jpeg?alt=media&token=d7f9b82d-6760-4847-ab00-36ebd12bde03',
+      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-thorsten-technoman-338504.jpg?alt=media&token=4d92b49b-e524-407d-8697-9a2e45cdc8e7',
       title: 'Hotel Riu Baobab',
       uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
     },

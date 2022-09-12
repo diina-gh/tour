@@ -67,7 +67,7 @@ export default function DetailResto({ route, navigation }) {
 
     function renderItem({item, index}) {
         return (
-          <Pressable onPress={() => navigation.navigate('DetailEvent', { name: 'Jane' })} activeOpacity={1} className="relative flex flex-col p-1.5 bg-white/90 rounded-2xl shadow" style={{flex: 1, flexDirection: 'column',margin: 6}}>
+          <Pressable onPress={() => navigation.navigate('DetailProduit', { name: 'Jane' })} activeOpacity={1} className="relative flex flex-col p-1.5 bg-white/90 rounded-2xl shadow" style={{flex: 1, flexDirection: 'column',margin: 6}}>
         
             <View style={{height: image_height}} className="relative w-full rounded-2xl bg-gray-300">
                 <Image className="w-full h-full object-cover rounded-2xl" source={{uri: item.image}} />
@@ -97,9 +97,9 @@ export default function DetailResto({ route, navigation }) {
         <View style={[Styles.container, styles.fontFamily]} >
 
             <Header
-                profil
+                back
+                title="La Corvette"
                 onPressBack={() => navigation.goBack()}
-                // title={route.name}
                 right="more-vertical"
                 onRightPress={() => console.log('right')}
             />
@@ -108,7 +108,7 @@ export default function DetailResto({ route, navigation }) {
 
                 <View className="w-full h-auto">
 
-                    <Text className="text-2xl text-gray-900 font-bold">Visitez les plus beaux endroits du Sénégal </Text>
+                    <Text className="text-2xl text-gray-900 font-bold">Saveur originale de La Corvette</Text>
 
                 </View>
 
@@ -124,7 +124,7 @@ export default function DetailResto({ route, navigation }) {
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
                             onChangeText={onChangeText}
-                            placeholder="Que cherchez vous ?"
+                            placeholder="Rechercher un menu ..."
                             value={text}
                         />
                     </View>
