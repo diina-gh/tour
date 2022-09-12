@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Pressable } from 'react-native'
 import { Badge, Surface, Text, Title } from 'react-native-paper'
 import Feather from 'react-native-vector-icons/Feather'
 import { Colors } from '../../utils/colors'
@@ -22,7 +22,8 @@ export const Header = ({
 	iconColor = 'black',
 	titleAlight,
 	optionalBadge,
-    profil
+    profil,
+    navigation,
 }) => {
 
 	const LeftView = () => (
@@ -37,9 +38,13 @@ export const Header = ({
             }
             {profil &&
                 <div style={styles.profilContainer}>
-                    <div style={styles.imageContainer}>
-                        <Image style={styles.image} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ludmilla-diniz-3766344.jpg?alt=media&token=7d03b0aa-d4ac-44d5-9dd9-6ec4e60c9e07'}} />
-                    </div>
+
+                    <Pressable activeOpacity={1} onPress={() => navigation.navigate('Signup')} >
+                        <div style={styles.imageContainer}>
+                            <Image style={styles.image} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ludmilla-diniz-3766344.jpg?alt=media&token=7d03b0aa-d4ac-44d5-9dd9-6ec4e60c9e07'}} />
+                        </div>
+                    </Pressable>
+
                     <div style={styles.greetings}>
                         <Text style={{ fontSize: 12.5, color: 'gray', marginBottom: 3 }}>
                             Bienvenue
@@ -48,6 +53,7 @@ export const Header = ({
                             Oumou GUEYE
                         </Text>
                     </div>
+
                 </div>
             }
 		</View>

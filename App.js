@@ -8,6 +8,8 @@ import DetailEvent from './pages/Events/detailEvent';
 import DetailHotel from './pages/Hotels/detailHotel';
 import DetailResto from './pages/Restos/detailResto';
 import DetailProduit from './pages/Restos/detailProduit';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +26,8 @@ export default function App() {
           <Stack.Screen name="DetailHotel" component={DetailHotel} options={{ headerShown: false }} />
           <Stack.Screen name="DetailResto" component={DetailResto} options={{ headerShown: false }} />
           <Stack.Screen name="DetailProduit" component={DetailProduit} options={{ headerShown: false }} />
+          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
         </Stack.Navigator>
 
       </NavigationContainer>

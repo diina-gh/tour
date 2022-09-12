@@ -18,7 +18,7 @@ const Styles = StyleSheet.create({
         opacity: 0.8,
     },
     boldText: {
-        fontWeight: 'bold',
+         fontWeight: "800",
     },
     contentContainerStyle: {
         paddingBottom: 200,

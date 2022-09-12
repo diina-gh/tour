@@ -16,6 +16,7 @@ export default function Home({ route, navigation }) {
 
             <Header
                 profil
+                navigation={navigation}
                 onPressBack={() => navigation.goBack()}
                 // title={route.name}
                 right="more-vertical"

@@ -151,13 +151,13 @@ const styles = StyleSheet.create({
   placeHeader:{
     color: 'white',
     fontSize: '16.5px',
-    fontWeight: '600'
+     fontWeight: "600"
   },
 
   placeDesc: {
     color: '#f3f3f3',
     fontSize: '12.5px',
-    fontWeight: '400',
+     fontWeight: "400",
     marginTop: '5px',
   },
 
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   posterName:{
     color: '#cccccc',
     fontSize: '11.5px',
-    fontWeight: '400',
+     fontWeight: "400",
     alignSelf: 'center'
   }
   

@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
       itemCategory:{
         color: '#cbcbcb',
         fontSize: '13px',
-        fontWeight: '500',
+         fontWeight: "500",
         marginBottom: '3px',
         textTransform: 'capitalize',
       },
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
       itemName:{
         color: 'white',
         fontSize: '16.5px',
-        fontWeight: '700'
+        fontWeight: "700"
       },
 
       itemDate:{
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         padding: '5px',
         color: '#333333',
         fontSize: '12px',
-        fontWeight: '700',
+        fontWeight: "700",
         borderRadius: 60,
       }
 

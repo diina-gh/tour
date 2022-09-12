@@ -155,14 +155,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         color: '#cbcbcb',
         fontSize: '13px',
-        fontWeight: '500',
+         fontWeight: "500",
         marginBottom: '3px',
       },
 
       locationDesc:{
         color: '#e8e8e8',
         fontSize: '13px',
-        fontWeight: '500',
+         fontWeight: "500",
         alignSelf: 'center',
       },
 
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
       itemName:{
         color: 'white',
         fontSize: '16.5px',
-        fontWeight: '700'
+        fontWeight: "700"
       },
 
       itemStars:{
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
       starsNumber:{
         color: '#333333',
         fontSize: '12px',
-        fontWeight: '700',
+        fontWeight: "700",
         alignSelf: 'center',
       },
 
