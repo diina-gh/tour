@@ -1,5 +1,6 @@
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+
 import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
 import { TailwindProvider } from 'tailwindcss-react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,28 +12,37 @@ import DetailProduit from './pages/Restos/detailProduit';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
+const cache = new InMemoryCache()
+
+const client = new ApolloClient({
+  uri: 'https://tour-brown.vercel.app/',
+  cache,
+  defaultOptions: { watchQuery: { fetchPolicy: 'cache-and-network' } },
+})
+
+
 const Stack = createStackNavigator();
 
 
 export default function App() {
   return (
-    <TailwindProvider>
 
-      <NavigationContainer>
+    <ApolloProvider client={client}>
+      <TailwindProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Root" component={TabNavigation} options={{ headerShown: false }} />
+            <Stack.Screen name="DetailEvent" component={DetailEvent} options={{ headerShown: false }} />
+            <Stack.Screen name="DetailHotel" component={DetailHotel} options={{ headerShown: false }} />
+            <Stack.Screen name="DetailResto" component={DetailResto} options={{ headerShown: false }} />
+            <Stack.Screen name="DetailProduit" component={DetailProduit} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TailwindProvider>
+    </ApolloProvider>
 
-        <Stack.Navigator>
-          <Stack.Screen name="Root" component={TabNavigation} options={{ headerShown: false }} />
-          <Stack.Screen name="DetailEvent" component={DetailEvent} options={{ headerShown: false }} />
-          <Stack.Screen name="DetailHotel" component={DetailHotel} options={{ headerShown: false }} />
-          <Stack.Screen name="DetailResto" component={DetailResto} options={{ headerShown: false }} />
-          <Stack.Screen name="DetailProduit" component={DetailProduit} options={{ headerShown: false }} />
-          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-          <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-        </Stack.Navigator>
-
-      </NavigationContainer>
-
-    </TailwindProvider>
   );
 }
 

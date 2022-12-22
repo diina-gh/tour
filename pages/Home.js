@@ -6,10 +6,17 @@ import Places from '../components/sections/Places';
 import Events from '../components/sections/Events';
 import Hotels from '../components/sections/Hotels';
 import Restos from '../components/sections/Restos';
+import { gql, useQuery } from '@apollo/client'
+import { PlacesQuery } from '../graphql/types/place.type';
+
 
 export default function Home({ route, navigation }) {
 
     const [text, onChangeText] = React.useState("");
+
+    const { data, loading } = useQuery(PlacesQuery)
+    console.log("query:loading => ", loading)
+    console.log("query:data => ", data)
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
