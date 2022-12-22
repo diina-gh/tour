@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 export const MenusQuery = gql`
     query Menus($filter: MenuFilterInput, $page: Int, $take: Int, $orderBy: MenuOrderInput) {

@@ -15,8 +15,7 @@ export default function Home({ route, navigation }) {
     const [text, onChangeText] = React.useState("");
 
     const { data, loading } = useQuery(PlacesQuery)
-    console.log("query:loading => ", loading)
-    console.log("query:data => ", data)
+    if(data) console.log("home:query:data => ", data)
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -34,52 +33,6 @@ export default function Home({ route, navigation }) {
 
                 <View className="w-full h-auto">
             
-                    {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full">
-
-                        <View className="w-[72px] flex flex-col mr-4">
-                            <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
-                                <Image className="w-full h-full rounded-full object-cover" source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/18045848-22350793.jpeg?alt=media&token=6a6d1e83-c0d8-4067-a148-4feaddbac01f'}} />
-                                <View className="w-full h-full absolute top-0 left-0 bg-gray-800 opacity-5 rounded-full"></View>
-                            </View>
-                            <Text className="text-xs font-medium text-gray-800 mt-1 w-[72px] h-auto text-center ">Dakar</Text>
-                        </View>
-
-                        <View className="w-[72px] flex flex-col mr-4">
-                            <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
-                                <Image className="w-full h-full rounded-full object-cover" source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/lac-rose.jpeg?alt=media&token=f239da10-17cf-4fe5-9213-8deae1203a2b'}} />
-                                <View className="w-full h-full absolute top-0 left-0 bg-gray-800 opacity-5 rounded-full"></View>
-                            </View>
-                            <Text className="text-xs font-medium text-gray-800 mt-1 w-[72px] h-auto text-center truncate ">Thies</Text>
-                        </View>
-
-                        <View className="w-[72px] flex flex-col mr-4">
-                            <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
-                                <Image className="w-full h-full rounded-full object-cover" source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/AdobeStock_305702974-Senegal-Casamance-Gambia-Mangroves-aerial-view.jpg.webp?alt=media&token=4cf5a974-95a1-4d74-ba89-61489141f932'}} />
-                                <View className="w-full h-full absolute top-0 left-0 bg-gray-800 opacity-5 rounded-full"></View>
-                            </View>
-                            <Text className="text-xs font-medium text-gray-800 mt-1 w-[72px] h-auto text-center truncate ">Casamance</Text>
-                        </View>
-
-
-                        <View className="w-[72px] flex flex-col mr-4">
-                            <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
-                                <Image className="w-full h-full rounded-full object-cover" source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/Les-puits-de-sel-multicolores-de-palmarin.jpeg?alt=media&token=77120c1e-aa4f-403f-84f5-cc141a21ea20'}} />
-                                <View className="w-full h-full absolute top-0 left-0 bg-gray-800 opacity-5 rounded-full"></View>
-                            </View>
-                            <Text className="text-xs font-medium text-gray-800 mt-1 w-[72px] h-auto text-center truncate ">Kaolack</Text>
-                        </View>
-
-                        <View className="w-[72px] flex flex-col mr-4">
-                            <View className="w-[72px] h-[72px] rounded-full border-2 border-orange-400 relative p-0.5">
-                                <Image className="w-full h-full rounded-full object-cover" source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/96cd8d35ac9d6fc85257386e78361bc0.webp?alt=media&token=51388630-abe3-4952-9c9a-1f650cb15555'}} />
-                                <View className="w-full h-full absolute top-0 left-0 bg-gray-800 opacity-5 rounded-full"></View>
-                            </View>
-                            <Text className="text-xs font-medium text-gray-800 mt-1 w-[72px] h-auto text-center truncate ">Mbour</Text>
-                        </View>
-
-
-                    </ScrollView> */}
-
                     <Text className="text-xl text-gray-900 font-bold">Visitez les plus beaux endroits du Sénégal </Text>
 
                 </View>
@@ -105,11 +58,11 @@ export default function Home({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1">
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</View>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text>
                     </ScrollView>
 
                     <Places />
@@ -124,11 +77,11 @@ export default function Home({ route, navigation }) {
                     </View>
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full mt-2 py-1">
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</View>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text>
                     </ScrollView>
 
                     <Events navigation={navigation} />

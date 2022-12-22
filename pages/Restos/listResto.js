@@ -1,19 +1,36 @@
 import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions } from 'react-native';
 import * as React from 'react';
+import { useState } from 'react';
 import { Header } from '../../components/commons/Header';
 import Styles from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { gql, useQuery } from '@apollo/client'
-import { RestaurantsQuery } from '../../graphql/types/restaurant.type';
+import { getRestaurants, RestaurantsQuery } from '../../graphql/types/restaurant.type';
+import { getCategoryMenus } from '../../graphql/types/categoryMenu.type';
 
 export default function ListResto({ route, navigation }) {
 
+    const [page, setPage] = useState(1);
+    const [take, setTake] = useState(10);
+    const [filter, setFilter] = useState(null)
+    const [direction, setDirection] = useState('asc')
+    const [orderBy, setOrderBy] = useState({"id": direction})
+    const [block, setBlock] = useState(false);
+
     const [text, onChangeText] = React.useState("");
 
-    const { data, loading } = useQuery(RestaurantsQuery)
-    console.log("query:loading => ", loading)
-    console.log("query:data => ", data)
+    // const { data, loading, error } = useQuery(RestaurantsQuery, {variables: { page, take, filter,orderBy },});
+    const {restaurantsData, restaurantsLoading, restaurantsError} = getRestaurants(page, take, filter,orderBy)
+    
+    if(restaurantsLoading) console.log("...")
+    if(restaurantsData) console.log("restaurant:query:restaurantsData => ", restaurantsData)
+    if(restaurantsError) console.log("restaurant:query:restaurantsError => ", restaurantsError)
 
+    const {categoryMenusData, categoryMenusLoading, categoryMenusError} = getCategoryMenus(page, take, filter,orderBy)
+
+    if(categoryMenusLoading) console.log("...")
+    if(categoryMenusData) console.log("categoryMenu:query:categoryMenusData => ", categoryMenusData)
+    if(categoryMenusError) console.log("categoryMenu:query:categoryMenusError => ", categoryMenusError)
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -55,7 +72,7 @@ export default function ListResto({ route, navigation }) {
                 <View className="w-full mt-5">
 
                     <FlatList
-                        data={data?.restaurants?.restaurants}
+                        data={restaurantsData?.restaurants?.restaurants}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
                     />
@@ -70,42 +87,47 @@ export default function ListResto({ route, navigation }) {
 
 
     );
+
+
+    function renderItem({item, index}) {
+        return (
+          <Pressable activeOpacity={1} onPress={() => navigation.navigate('DetailResto', {restaurant: item})} className="relative w-full h-64 rounded-2xl mb-5">
+    
+            <Image className="w-full h-full rounded-2xl" source={{uri: item?.images[item?.images?.length -1].url}} />
+    
+            <LinearGradient className="absolute top-0 left-0 w-full h-full rounded-2xl" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
+                
+                <View className="absolute bottom-5 left-6" >
+                    <View className="flex flex-row">
+                        <View className="w-3 text-gray-200 mr-0.5 self-center">
+                            <svg className="w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </View>
+                        <Text className="text-gray-200 text-sm font-medium self-center">{item?.address}</Text>
+                    </View>
+                    <Text className="text-xl text-white font-semibold">{item?.name}</Text>
+                </View>
+    
+    
+                <View className="bg-white/90 rounded-2xl px-3 py-1.5 absolute top-5 right-6 w-fit flex flex-row" >
+                    <Text className="text-gray-800 text-sm font-semibold mr-1 self-center">4/5</Text>
+                    <View className="w-5 text-orange-300 self-center">
+                        <svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                    </View>
+                </View>
+    
+            </LinearGradient>
+    
+          </Pressable>
+        );
+      }
+
+
+
 }
 
-function renderItem({item, index}) {
-    return (
-      <Pressable activeOpacity={1} onPress={() => navigation.navigate('DetailResto', { name: 'Jane' })} className="relative w-full h-64 rounded-2xl mb-5">
-
-        <Image className="w-full h-full rounded-2xl" source={{uri: item?.images[item?.images?.length -1].url}} />
-
-        <LinearGradient className="absolute top-0 left-0 w-full h-full rounded-2xl" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
-            
-            <View className="absolute bottom-5 left-6" >
-                <View className="flex flex-row">
-                    <View className="w-3 text-gray-200 mr-0.5 self-center">
-                        <svg className="w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </View>
-                    <Text className="text-gray-200 text-sm font-medium self-center">{item?.address}</Text>
-                </View>
-                <Text className="text-xl text-white font-semibold">{item?.name}</Text>
-            </View>
-
-
-            <View className="bg-white/90 rounded-2xl px-3 py-1.5 absolute top-5 right-6 w-fit flex flex-row" >
-                <Text className="text-gray-800 text-sm font-semibold mr-1 self-center">4/5</Text>
-                <View className="w-5 text-orange-300 self-center">
-                    <svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                </View>
-            </View>
-
-        </LinearGradient>
-
-      </Pressable>
-    );
-  }
 
 const styles = StyleSheet.create({
 	fontFamily: {

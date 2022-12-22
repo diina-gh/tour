@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 export const EventsQuery = gql`
     query Events($page: Int, $take: Int, $filter: EventFilterInput, $orderBy: EventOrderInput) {

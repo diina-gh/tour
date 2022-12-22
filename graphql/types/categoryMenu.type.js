@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 export const CategoryMenusQuery = gql`
     query CategoryMenus($filter: CategoryMenuFilterInput, $page: Int, $take: Int, $orderBy: CategoryMenuOrderInput) {
@@ -78,3 +78,8 @@ export const DeleteCategoryMenuMutation = gql`
         }
     }
 `;
+
+export  function getCategoryMenus (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(CategoryMenusQuery, {variables: { page, take, filter,orderBy },});
+    return {categoryMenusData: data, categoryMenusLoading: loading, categoryMenusError: error}
+}

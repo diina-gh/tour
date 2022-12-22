@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 export const CategoriesQuery = gql`
     query categories($filter: CategoryFilterInput, $page: Int, $take: Int, $orderBy: CategoryOrderInput) {

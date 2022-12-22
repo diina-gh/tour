@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 export const HotelsQuery = gql`
     query Hotels($filter: HotelFilterInput, $page: Int, $take: Int, $orderBy: HotelOrderInput) {

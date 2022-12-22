@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 export const RestaurantsQuery = gql`
     query Restaurants($filter: RestaurantFilterInput, $page: Int, $take: Int, $orderBy: RestaurantOrderInput) {
@@ -18,6 +18,21 @@ export const RestaurantsQuery = gql`
                     id
                     imageref
                     url
+                }
+                menus {
+                    id
+                    name
+                    desc
+                    price
+                    categoryMenu {
+                        id
+                        name
+                    }
+                    images {
+                        id
+                        imageref
+                        url
+                    }
                 }
             }
         }
@@ -104,3 +119,8 @@ export const DeleteRestaurantMutation = gql`
         }
     }
 `;
+
+export  function getRestaurants (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(RestaurantsQuery, {variables: { page, take, filter,orderBy },});
+    return {restaurantsData: data, restaurantsLoading: loading, restaurantsError: error}
+}
