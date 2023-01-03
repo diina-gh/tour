@@ -11,12 +11,12 @@ import { PlacesQuery, getPlaces } from '../graphql/types/place.type';
 import { getCategories } from '../graphql/types/category.type';
 import { capitalize } from '../utils/utils';
 
-let mutedCategory = ""
-let activeCategory = "w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium"
+let mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-gray-900 text-sm font-medium"
+let activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-white text-sm font-medium"
 
 export default function Home({ route, navigation }) {
 
-    const [text, onChangeText] = React.useState("");
+    const [text, setText] = useState("");
 
     const [page, setPage] = useState(1);
     const [take, setTake] = useState(10);
@@ -24,6 +24,7 @@ export default function Home({ route, navigation }) {
     const [direction, setDirection] = useState('asc')
     const [orderBy, setOrderBy] = useState({"id": direction})
     const [block, setBlock] = useState(false);
+
 
     const {placesData, placesLoading, placesError} = getPlaces(page, take, filter,orderBy)
   
@@ -37,10 +38,21 @@ export default function Home({ route, navigation }) {
     if(categoriesData) console.log("categoryPlace:query:categoryPlacesData => ", categoriesData)
     if(categoriesError) console.log("categoryPlace:query:categoryPlacesError => ", categoriesError)
 
+    function filterByCategory(id){
+        let newFilter = {"activated": null, "query": "", "categoryId": id};
+        setFilter(newFilter)
+    }
+
+    function searchPlace(text){
+        setText(text)
+        let newFilter = {"activated": null, "query": text, "categoryId": null};
+        setFilter(newFilter)
+    }
+
     function renderCategory({item, index}) {
         return (
-            <Pressable onPress={() => navigation.navigate('DetailEvent', { name: 'Jane' })} activeOpacity={1} className="w-24 min-w-fit px-2 py-1.5 mr-3 mb-0.5 bg-white shadow-sm border border-gray-200 rounded-2xl">
-                <Text className="text-center text-gray-900 text-sm font-medium">{capitalize(item?.name)}</Text>
+            <Pressable onPress={() => filterByCategory(item.id)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                <Text className={item.id == filter?.categoryId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
             </Pressable>
         );
     }
@@ -76,7 +88,7 @@ export default function Home({ route, navigation }) {
                     <View className="w-[90%] h-full rounded-lg self-center">
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
-                            onChangeText={onChangeText}
+                            onChangeText={value => searchPlace(value)}
                             placeholder="Rechercher un site ..."
                             value={text}
                         />
@@ -86,7 +98,9 @@ export default function Home({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1">
-                        <Text className={activeCategory}>Tout</Text>
+                        <Pressable onPress={() => filterByCategory(null)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                            <Text className={filter?.categoryId == null ? activeCategory: mutedCategory}>Tout</Text>
+                        </Pressable>
                         <FlatList data={categoriesData?.categories?.categories} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
                     </ScrollView>
 
