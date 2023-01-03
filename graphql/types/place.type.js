@@ -125,3 +125,9 @@ export const DeletePlaceMutation = gql`
         }
     }
 `;
+
+
+export  function getPlaces (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(PlacesQuery, {variables: { page, take, filter,orderBy },});
+    return {placesData: data, placesLoading: loading, placesError: error}
+}

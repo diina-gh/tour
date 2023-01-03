@@ -78,3 +78,8 @@ export const DeleteCategoryMutation = gql`
         }
     }
 `;
+
+export  function getCategories (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(CategoriesQuery, {variables: { page, take, filter,orderBy },});
+    return {categoriesData: data, categoriesLoading: loading, categoriesError: error}
+}

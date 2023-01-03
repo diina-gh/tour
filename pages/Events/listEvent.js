@@ -1,11 +1,14 @@
 import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions } from 'react-native';
 import * as React from 'react';
+import { useState } from 'react';
 import { Header } from '../../components/commons/Header';
 import Styles from '../../styles';
 import Places from '../../components/sections/Places';
 import Events from '../../components/sections/Events';
 import Hotels from '../../components/sections/Hotels';
 import { LinearGradient } from 'expo-linear-gradient';
+import { getEvents } from '../../graphql/types/event.type';
+import { getCategoryEvents } from '../../graphql/types/categoryEvent.type';
 
 const {width: windowWidth} = Dimensions.get('window');
 
@@ -46,7 +49,27 @@ const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.apps
 
 export default function ListEvent({ route, navigation }) {
 
+    const [page, setPage] = useState(1);
+    const [take, setTake] = useState(10);
+    const [filter, setFilter] = useState(null)
+    const [direction, setDirection] = useState('asc')
+    const [orderBy, setOrderBy] = useState({"id": direction})
+    const [block, setBlock] = useState(false);
+
     const [text, onChangeText] = React.useState("");
+
+    // const { data, loading, error } = useQuery(EventsQuery, {variables: { page, take, filter,orderBy },});
+    const {eventsData, eventsLoading, eventsError} = getEvents(page, take, filter,orderBy)
+    
+    if(eventsLoading) console.log("...")
+    if(eventsData) console.log("event:query:eventsData => ", eventsData)
+    if(eventsError) console.log("event:query:eventsError => ", eventsError)
+
+    const {categoryEventsData, categoryEventsLoading, categoryEventsError} = getCategoryEvents(null, null, null, null)
+
+    if(categoryEventsLoading) console.log("...")
+    if(categoryEventsData) console.log("categoryEvent:query:categoryEventsData => ", categoryEventsData)
+    if(categoryEventsError) console.log("categoryEvent:query:categoryEventsError => ", categoryEventsError)
 
     function renderItem({item, index}) {
         return (
@@ -55,7 +78,7 @@ export default function ListEvent({ route, navigation }) {
             <Image className="w-full h-full rounded-2xl" source={{uri: item?.image}} />
     
             <LinearGradient className="absolute top-0 left-0 w-full h-full rounded-2xl" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
-                <View className="absolute bottom-5 left-6" >
+                <View className="absolute bottom-5 left-6" >      
                     <Text className="text-md text-gray-400 font-normal uppercase">{item.category}</Text>
                     <Text className="text-xl text-white font-semibold">{item.title}</Text>
                 </View>
@@ -70,7 +93,7 @@ export default function ListEvent({ route, navigation }) {
                         <Image className="w-full h-full rounded-full" source={{uri: image3}} />
                     </View>
                     <View className="w-10 h-10 rounded-full bg-[#0e0e0e] bg-opacity-50 shadow-xl border-2 border-[#0e0e0e] self-center flex flex-col justify-center -ml-5">
-                        <View className="w-full text-center text-sm text-white font-semibold   ">+2k</View>
+                        <Text className="w-full text-center text-sm text-white font-semibold">+2k</Text>
                     </View>
                 </View>
                 <View className="bg-white/90 rounded-lg h-fit w-fit flex flex-col items-center px-[8px] py-1 absolute top-5 right-4">
@@ -82,6 +105,16 @@ export default function ListEvent({ route, navigation }) {
           </Pressable>
         );
       }
+
+    
+    function renderCategory({item, index}) {
+        return (
+            <Pressable onPress={() => navigation.navigate('DetailEvent', { name: 'Jane' })} activeOpacity={1} className="w-24 min-w-fit px-2 py-1.5 mr-3 mb-0.5 bg-white shadow-sm border border-gray-200 rounded-2xl">
+                <Text className="text-center text-gray-900 text-sm font-medium">{item?.name}</Text>
+            </Pressable>
+        );
+    }
+
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -123,18 +156,18 @@ export default function ListEvent({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full py-1 mb-4">
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</View>
-                        <View className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</View>
+
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 mb-0.5 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium">Tout</Text>
+                        {/* <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</Text>
+                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text> */}
+
+                        <FlatList data={categoryEventsData?.categoryEvents?.categoryEvents} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
+
                     </ScrollView>
 
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    />
+                    <FlatList data={data} renderItem={renderItem} keyExtractor={item => item.id} />
 
                 </View>
 

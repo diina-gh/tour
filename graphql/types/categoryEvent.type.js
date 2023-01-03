@@ -78,3 +78,8 @@ export const DeleteCategoryEventMutation = gql`
         }
     }
 `;
+
+export  function getCategoryEvents (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(CategoryEventsQuery, {variables: { page, take, filter,orderBy },});
+    return {categoryEventsData: data, categoryEventsLoading: loading, categoryEventsError: error}
+}

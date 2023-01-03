@@ -11,41 +11,16 @@ import {
 import Carousel from 'react-native-anchor-carousel';
 import DotPagination from '../commons/DotPagination';
 import { LinearGradient } from 'expo-linear-gradient';
+import { getPlaces } from '../../graphql/types/place.type';
+import { getCategories } from '../../graphql/types/category.type';
+import { truncate } from '../../utils/utils';
 
 const {width: windowWidth} = Dimensions.get('window');
-
-const data = [
-  {
-    uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/96cd8d35ac9d6fc85257386e78361bc0.webp?alt=media&token=51388630-abe3-4952-9c9a-1f650cb15555',
-    title: 'Lorem ipsum dolor sit amet',
-    content:
-      'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-  },
-  {
-    uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/lac-rose.jpeg?alt=media&token=f239da10-17cf-4fe5-9213-8deae1203a2b',
-    title: 'Lorem ipsum ',
-    content: 'Neque porro quisquam est qui dolorem ipsum ',
-  },
-  {
-    uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/18045848-22350793.jpeg?alt=media&token=6a6d1e83-c0d8-4067-a148-4feaddbac01f',
-    title: 'Lorem ipsum dolor',
-    content:
-      'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-  },
-  {
-    uri: 'https://i.imgur.com/fRGHItn.jpg',
-    title: 'Lorem ipsum dolor',
-    content: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet',
-  },
-  {
-    uri: 'https://i.imgur.com/WmenvXr.jpg',
-    title: 'Lorem ipsum ',
-    content: 'Neque porro quisquam est qui dolorem ipsum quia dolor ',
-  },
-];
-
 const INITIAL_INDEX = 0;
+
+
 export default function Places(props) {
+
   const carouselRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(INITIAL_INDEX);
 
@@ -54,26 +29,18 @@ export default function Places(props) {
   }
 
   function renderItem({item, index}) {
-    const {uri, title, content} = item;
-    return (
-      <TouchableOpacity
-        activeOpacity={1}
-        style={styles.item}
-        onPress={() => {
-          carouselRef.current.scrollToIndex(index);
-        }}>
 
-        <Image  style={styles.itemImage} source={{uri: item?.uri}} />
+    return (
+      <TouchableOpacity activeOpacity={1} style={styles.item} onPress={() => {carouselRef.current.scrollToIndex(index);}}>
+
+        <Image  style={styles.itemImage} source={{uri: item?.images[0]?.url}} />
         
-        <LinearGradient
-          colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']}
-          style={styles.placeView}
-        >
+        <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} style={styles.placeView}>
 
           <View>
-            <Text style={styles.placeHeader}>Monument de la renaissance</Text>
+            <Text style={styles.placeHeader}>{item?.name}</Text>
             <Text style={styles.placeDesc}>
-              Le Monument de la Renaissance africaine est un groupe monumental de 52 mètres ...
+              {truncate(item?.desc, 95)}
             </Text>
             <View style={styles.poster} >
               <View style={styles.posterImgContainer}>
@@ -83,7 +50,6 @@ export default function Places(props) {
             </View>
           </View>
 
-
       </LinearGradient>
 
       </TouchableOpacity>
@@ -91,17 +57,19 @@ export default function Places(props) {
   }
 
   return (
+    
+
     <View style={styles.container}>
       <Carousel
         style={styles.carousel}
-        data={data}
+        data={props.places}
         renderItem={renderItem}
         itemWidth={0.7 * windowWidth}
         inActiveOpacity={0.3}
         onScrollEnd={handleCarouselScrollEnd}
         ref={carouselRef}
       />
-      <DotPagination currentIndex={currentIndex} length={data.length} color='#e4ded8' />
+      <DotPagination currentIndex={currentIndex} length={props.places?.length} color='#e4ded8' />
     </View>
   );
 }

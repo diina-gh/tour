@@ -1,5 +1,5 @@
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput } from 'react-native';
-import * as React from 'react';
+import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList } from 'react-native';
+import React, {useRef, useState} from 'react';
 import { Header } from '../components/commons/Header';
 import Styles from '../styles';
 import Places from '../components/sections/Places';
@@ -7,15 +7,43 @@ import Events from '../components/sections/Events';
 import Hotels from '../components/sections/Hotels';
 import Restos from '../components/sections/Restos';
 import { gql, useQuery } from '@apollo/client'
-import { PlacesQuery } from '../graphql/types/place.type';
+import { PlacesQuery, getPlaces } from '../graphql/types/place.type';
+import { getCategories } from '../graphql/types/category.type';
+import { capitalize } from '../utils/utils';
 
+let mutedCategory = ""
+let activeCategory = "w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium"
 
 export default function Home({ route, navigation }) {
 
     const [text, onChangeText] = React.useState("");
 
-    const { data, loading } = useQuery(PlacesQuery)
-    if(data) console.log("home:query:data => ", data)
+    const [page, setPage] = useState(1);
+    const [take, setTake] = useState(10);
+    const [filter, setFilter] = useState(null)
+    const [direction, setDirection] = useState('asc')
+    const [orderBy, setOrderBy] = useState({"id": direction})
+    const [block, setBlock] = useState(false);
+
+    const {placesData, placesLoading, placesError} = getPlaces(page, take, filter,orderBy)
+  
+    if(placesLoading) console.log("...")
+    if(placesData) console.log("place:query:placesData => ", placesData)
+    if(placesError) console.log("place:query:placesError => ", placesError)
+
+    const {categoriesData, categoriesLoading, categoriesError} = getCategories(null, null, null, null)
+
+    if(categoriesLoading) console.log("...")
+    if(categoriesData) console.log("categoryPlace:query:categoryPlacesData => ", categoriesData)
+    if(categoriesError) console.log("categoryPlace:query:categoryPlacesError => ", categoriesError)
+
+    function renderCategory({item, index}) {
+        return (
+            <Pressable onPress={() => navigation.navigate('DetailEvent', { name: 'Jane' })} activeOpacity={1} className="w-24 min-w-fit px-2 py-1.5 mr-3 mb-0.5 bg-white shadow-sm border border-gray-200 rounded-2xl">
+                <Text className="text-center text-gray-900 text-sm font-medium">{capitalize(item?.name)}</Text>
+            </Pressable>
+        );
+    }
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -58,14 +86,11 @@ export default function Home({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1">
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text>
+                        <Text className={activeCategory}>Tout</Text>
+                        <FlatList data={categoriesData?.categories?.categories} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
                     </ScrollView>
 
-                    <Places />
+                    <Places navigation={navigation} places={placesData?.places?.places}  />
 
                 </View>
 
@@ -95,7 +120,7 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
-                    <Hotels navigation={navigation} />
+                    <Hotels navigation={navigation}/>
 
                 </View>
 

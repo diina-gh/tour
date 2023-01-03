@@ -124,3 +124,8 @@ export const DeleteEventMutation = gql`
         }
     }
 `;
+
+export  function getEvents (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(EventsQuery, {variables: { page, take, filter,orderBy },});
+    return {eventsData: data, eventsLoading: loading, eventsError: error}
+}
