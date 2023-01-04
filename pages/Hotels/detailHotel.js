@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Button, Dimensions, TouchableWithoutFeedback, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 
 
 const {width, height } = Dimensions.get("window");
+let mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
+let activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg p-0.5";
 
 const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-thorsten-technoman-338504.jpg?alt=media&token=4d92b49b-e524-407d-8697-9a2e45cdc8e7"
 const image2 = 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-pixabay-276671.jpg?alt=media&token=869bf7b1-8de1-44f1-aa98-396cd352efe4'
@@ -14,9 +16,11 @@ const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.apps
 const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-kelly-2869215.jpg?alt=media&token=5a7135ad-c31b-4bc5-83e6-987cf9573124"
 
 
-export default function DetailHotel({navigation}) {
+export default function DetailHotel({route, navigation}) {
 
+  const { hotel } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
+  const [chosenImage, setChosenImage] = useState(hotel?.images[0]);
 
   const getModal = () =>{
       return (
@@ -34,6 +38,15 @@ export default function DetailHotel({navigation}) {
       );
   };
 
+  function renderGalerie({item, index}) {
+    return (
+        <Pressable onPress={() => setChosenImage(item)}  activeOpacity={1} className="mr-4 rounded-lg shadow-sm">
+            <View className={item?.url == chosenImage?.url ? activeImage : mutedImage}>
+                <Image className="w-full h-full object-cover rounded-lg" source={{uri: item?.url}} />
+            </View>
+        </Pressable>
+    );
+   }
 
   return (
     // <View style={styles.container}>
@@ -46,7 +59,7 @@ export default function DetailHotel({navigation}) {
 
             <View className="relative w-full h-96 bg-stone-100">
                 
-                <Image className="w-full h-full object-cover" source={{uri: image1}} />
+                <Image className="w-full h-full object-cover" source={{uri: chosenImage?.url}} />
                 
                 <LinearGradient className="absolute top-0 left-0 w-full h-full" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.3)']} >
 
@@ -67,9 +80,9 @@ export default function DetailHotel({navigation}) {
                         </View>
                     </View>
 
-                    <View className="absolute bottom-5 left-0 w-full flex flex-row justify-center" >
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="absolute bottom-5 left-0 w-full flex flex-row px-10" >
 
-                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg shadow-sm p-0.5 mr-4">
+                        {/* <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg shadow-sm p-0.5 mr-4">
                             <Image className="w-full h-full object-cover rounded-lg" source={{uri: image2}} />
                         </View>
 
@@ -83,9 +96,11 @@ export default function DetailHotel({navigation}) {
 
                         <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm">
                             <Image className="w-full h-full object-cover rounded-lg" source={{uri: image4}} />
-                        </View>
+                        </View> */}
 
-                    </View>
+                        <FlatList data={hotel?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
+
+                    </ScrollView>
 
                 </LinearGradient>
 
@@ -99,9 +114,9 @@ export default function DetailHotel({navigation}) {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
                     </View>
-                    <Text className="text-gray-400 text-[14px] font-medium self-center">Dakar, Senegal</Text>
+                    <Text className="text-gray-400 text-[14px] font-medium self-center">{hotel?.address}</Text>
                 </View>
-                <Text className="text-xl text-[#0b0b0b] font-semibold">Hotel Riu Baobab</Text>
+                <Text className="text-xl text-[#0b0b0b] font-semibold">{hotel?.name}</Text>
             </View>
 
             <View className="w-full flex flex-row px-4 mt-4">
@@ -119,7 +134,7 @@ export default function DetailHotel({navigation}) {
 
                 <View className="flex flex-col mt-4">
                     <Text className="text-base text-gray-700 font-medium">
-                        Situé au cœur d’une beauté naturelle exubérante, l’Hotel Riu Baobab est le lieu idéal pour passer des vacances inoubliables. Il dispose de plus de 500 chambres, spécialement aménagées pour vous offrir un maximum de confort et de bien-être. Et si vous souhaitez encore plus de confort, nous mettons à votre disposition les chambres swim-up réservées aux adultes avec piscine privée, qui vous permettront de vivre une expérience inoubliable en couple ou entre amis.
+                        {hotel?.desc}
                     </Text>
                 </View>
 

@@ -24,7 +24,7 @@ export default function Events(props) {
 
   function renderItem({item, index}) {
     return (
-      <Pressable activeOpacity={1} style={styles.item}  onPress={() => props.navigation.navigate('DetailEvent', { name: 'Jane' })} onFocus={() => {carouselRef.current.scrollToIndex(index);}}>
+      <Pressable activeOpacity={1} style={styles.item} onPress={() => props.navigation.navigate('DetailEvent', {event: item})} onFocus={() => {carouselRef.current.scrollToIndex(index);}}>
 
         <Image  style={styles.itemImage} source={{uri: item?.images[0]?.url}} />
 
