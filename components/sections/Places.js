@@ -6,13 +6,10 @@ import {
   View,
   Dimensions,
   Image,
-  ImageBackground
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
 import DotPagination from '../commons/DotPagination';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getPlaces } from '../../graphql/types/place.type';
-import { getCategories } from '../../graphql/types/category.type';
 import { truncate } from '../../utils/utils';
 
 const {width: windowWidth} = Dimensions.get('window');

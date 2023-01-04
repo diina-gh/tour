@@ -2,19 +2,15 @@ import React, {useRef} from 'react';
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   Dimensions,
   Image,
-  ImageBackground,
   Pressable,
   Linking,
   Alert,
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
-import DotPagination from '../commons/DotPagination';
 import { LinearGradient } from 'expo-linear-gradient';
-import LocationIcon from '../ui/icons/locationIcon';
 
 const {width: windowWidth} = Dimensions.get('window');
 
@@ -24,15 +20,6 @@ const SEPARATOR_WIDTH = 10;
 export default function Hotels(props) {
   const {style} = props;
   const carouselRef = useRef(null);
-
-  async function handleInstallNowClick(uri) {
-    const supported = await Linking.canOpenURL(uri);
-    if (supported) {
-      await Linking.openURL(uri);
-    } else {
-      Alert.alert(`Don't know how to open this URL: ${uri}`);
-    }
-  }
 
   function renderItem({item, index}) {
     return (
