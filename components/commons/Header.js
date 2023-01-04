@@ -26,6 +26,9 @@ export const Header = ({
     navigation,
 }) => {
 
+
+	const user = JSON.parse(localStorage.getItem('user'));
+
 	const LeftView = () => (
 		<View style={styles.view}>
 			{menu && <TouchableOpacity onPress={onPressMenu}>
@@ -41,7 +44,7 @@ export const Header = ({
 
                     <Pressable activeOpacity={1} onPress={() => navigation.navigate('Login')} >
                         <div style={styles.imageContainer}>
-                            <Image style={styles.image} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ludmilla-diniz-3766344.jpg?alt=media&token=7d03b0aa-d4ac-44d5-9dd9-6ec4e60c9e07'}} />
+                            <Image style={styles.image} source={{uri: user?.image?.url}} />
                         </div>
                     </Pressable>
 
@@ -50,7 +53,7 @@ export const Header = ({
                             Bienvenue
                         </Text>
                         <Text style={{ fontSize: 14, fontWeight: 500}}>
-                            Oumou GUEYE
+                            {user?.firstname + ' ' + user?.lastname}
                         </Text>
                     </div>
 
