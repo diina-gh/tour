@@ -14,39 +14,10 @@ import {
 import Carousel from 'react-native-anchor-carousel';
 import DotPagination from '../commons/DotPagination';
 import { LinearGradient } from 'expo-linear-gradient';
+import { formatDate } from '../../utils/utils';
 
 const {width: windowWidth} = Dimensions.get('window');
 
-const data = [
-    {
-      id: 'item3',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/la-lutte-senegalaise-1024x609.jpeg?alt=media&token=9a5678fe-0279-47ac-ae52-e1ddb16a42ab',
-      title: 'Combat de lutte',
-      category: 'SPORT',
-      uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-    },
-    {
-      id: 'item6',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/concert2.webp?alt=media&token=257d9eea-199d-4a1e-99b7-0d6fc03264ab',
-      title: 'Concert de Mbalax',
-      category: 'CONCERT',
-      uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-    },
-    {
-      id: 'item1',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/bey%20concert.gif?alt=media&token=257aa2b7-ba2a-47ab-ab23-4ea22691f259',
-      title: 'Coachella 2022',
-      category: 'CONCERT',
-      uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-    },
-    {
-      id: 'item2',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/giphy.gif?alt=media&token=20cb6993-3c68-4f3b-8cbb-f1a7b50d3522',
-      title: 'Concert de Rap',
-      category: 'CONCERT',
-      uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-    },
-  ];
 const ITEM_WIDTH = 0.7 * windowWidth;
 const SEPARATOR_WIDTH = 10;
 
@@ -67,14 +38,14 @@ export default function Events(props) {
     return (
       <Pressable activeOpacity={1} style={styles.item}  onPress={() => props.navigation.navigate('DetailEvent', { name: 'Jane' })} onFocus={() => {carouselRef.current.scrollToIndex(index);}}>
 
-        <Image  style={styles.itemImage} source={{uri: item?.image}} />
+        <Image  style={styles.itemImage} source={{uri: item?.images[0]?.url}} />
 
         <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} style={styles.placeView}>
             <View style={styles.itemDesc}>
-                <Text style={styles.itemCategory}>{item.category}</Text>
-                <Text style={styles.itemName}>{item.title}</Text>
+                <Text style={styles.itemCategory}>{item?.categoryEvent?.name}</Text>
+                <Text style={styles.itemName}>{item?.name}</Text>
             </View>
-            <Text style={styles.itemDate}>Nov-22</Text>
+            <Text style={styles.itemDate}>{formatDate(item?.date)}</Text>
         </LinearGradient>
 
       </Pressable>
@@ -87,7 +58,7 @@ export default function Events(props) {
         keyExtractor={item => item?.id}
         style={[styles.carousel, style]}
         ref={carouselRef}
-        data={data}
+        data={props.events}
         renderItem={renderItem}
         itemWidth={ITEM_WIDTH - 50}
         separatorWidth={SEPARATOR_WIDTH + 4}

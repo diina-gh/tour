@@ -1,5 +1,6 @@
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList } from 'react-native';
+import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, ActivityIndicator, Alert } from 'react-native';
 import React, {useRef, useState} from 'react';
+import Toast from 'react-native-toast-message';
 import { Header } from '../components/commons/Header';
 import Styles from '../styles';
 import Places from '../components/sections/Places';
@@ -10,6 +11,10 @@ import { gql, useQuery } from '@apollo/client'
 import { PlacesQuery, getPlaces } from '../graphql/types/place.type';
 import { getCategories } from '../graphql/types/category.type';
 import { capitalize } from '../utils/utils';
+import { getEvents } from '../graphql/types/event.type';
+import { getCategoryEvents } from '../graphql/types/categoryEvent.type';
+import { getHotels } from '../graphql/types/hotel.type';
+import { getRestaurants } from '../graphql/types/restaurant.type';
 
 let mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-gray-900 text-sm font-medium"
 let activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-white text-sm font-medium"
@@ -21,26 +26,40 @@ export default function Home({ route, navigation }) {
     const [page, setPage] = useState(1);
     const [take, setTake] = useState(10);
     const [filter, setFilter] = useState(null)
+    const [filterEvent, setFilterEvent] = useState(null)
     const [direction, setDirection] = useState('asc')
     const [orderBy, setOrderBy] = useState({"id": direction})
     const [block, setBlock] = useState(false);
 
-
+    // Fetch place
     const {placesData, placesLoading, placesError} = getPlaces(page, take, filter,orderBy)
-  
-    if(placesLoading) console.log("...")
-    if(placesData) console.log("place:query:placesData => ", placesData)
-    if(placesError) console.log("place:query:placesError => ", placesError)
-
     const {categoriesData, categoriesLoading, categoriesError} = getCategories(null, null, null, null)
+    // Fetch events
+    const {eventsData, eventsLoading, eventsError} = getEvents(null, null, filterEvent, null)
+    const {categoryEventsData, categoryEventsLoading, categoryEventsError} = getCategoryEvents(null, null, null, null)
+    // Fetch hotels
+    const {hotelsData, hotelsLoading, hotelsError} = getHotels(null, null, null, null)
+    // Fetch restaurants
+    const {restaurantsData, restaurantsLoading, restaurantsError} = getRestaurants(null, null, null, null)
 
-    if(categoriesLoading) console.log("...")
-    if(categoriesData) console.log("categoryPlace:query:categoryPlacesData => ", categoriesData)
-    if(categoriesError) console.log("categoryPlace:query:categoryPlacesError => ", categoriesError)
+    function filterByCategory(id, type = 'place'){
 
-    function filterByCategory(id){
-        let newFilter = {"activated": null, "query": "", "categoryId": id};
-        setFilter(newFilter)
+        // Toast.show({
+        //     type: 'success',
+        //     text1: 'Hello',
+        //     text2: 'This is some something 👋'
+        //   });
+
+        let newFilter = null
+        switch (type) {
+            case 'place':
+                newFilter = {"activated": null, "query": "", "categoryId": id};
+                setFilter(newFilter)
+                break;
+            case 'event':
+                newFilter = {"activated": null, "query": "", "categoryEventId": id};
+                setFilterEvent(newFilter)
+        }
     }
 
     function searchPlace(text){
@@ -49,10 +68,19 @@ export default function Home({ route, navigation }) {
         setFilter(newFilter)
     }
 
+
     function renderCategory({item, index}) {
         return (
             <Pressable onPress={() => filterByCategory(item.id)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
                 <Text className={item.id == filter?.categoryId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
+            </Pressable>
+        );
+    }
+
+    function renderCategoryEvent({item, index}) {
+        return (
+            <Pressable onPress={() => filterByCategory(item.id, 'event')}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                <Text className={item.id == filterEvent?.categoryEventId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
             </Pressable>
         );
     }
@@ -104,7 +132,15 @@ export default function Home({ route, navigation }) {
                         <FlatList data={categoriesData?.categories?.categories} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
                     </ScrollView>
 
-                    <Places navigation={navigation} places={placesData?.places?.places}  />
+                    {placesLoading ? (
+                        <View style={styles.loadingContainer} className="py-40">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+
+                        <Places navigation={navigation} places={placesData?.places?.places}  />
+
+                    )}
 
                 </View>
 
@@ -115,15 +151,22 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full mt-2 py-1">
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium  ">Tout</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1 mt-2">
+                        <Pressable onPress={() => filterByCategory(null, 'event')}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                            <Text className={filterEvent?.categoryEventId == null ? activeCategory: mutedCategory}>Tout</Text>
+                        </Pressable>
+                        <FlatList data={categoryEventsData?.categoryEvents?.categoryEvents} renderItem={renderCategoryEvent} keyExtractor={item => item.id} horizontal={true} />
                     </ScrollView>
 
-                    <Events navigation={navigation} />
+                    {eventsLoading ? (
+                        <View style={styles.loadingContainer} className="py-24">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+
+                        <Events navigation={navigation} events={eventsData?.events?.events} />
+
+                    )}
 
                 </View>
 
@@ -134,7 +177,13 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
-                    <Hotels navigation={navigation}/>
+                    {hotelsLoading ? (
+                        <View style={styles.loadingContainer} className="py-24">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+                        <Hotels navigation={navigation} hotels={hotelsData?.hotels?.hotels} />
+                    )}
 
                 </View>
 
@@ -145,7 +194,13 @@ export default function Home({ route, navigation }) {
                         <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
                     </View>
 
-                    <Restos navigation={navigation} />
+                    {restaurantsLoading ? (
+                        <View style={styles.loadingContainer} className="py-24">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+                        <Restos navigation={navigation} restaurants={restaurantsData?.restaurants?.restaurants} />
+                    )}
 
                 </View>
 

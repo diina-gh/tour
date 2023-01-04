@@ -18,33 +18,6 @@ import LocationIcon from '../ui/icons/locationIcon';
 
 const {width: windowWidth} = Dimensions.get('window');
 
-const data = [
-    {
-      id: 'item6',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-michelle-riach-995743.jpg?alt=media&token=7476d0f9-067a-491a-b213-d940e22d2b06',
-      title: 'La Corvette',
-      uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-    },
-    {
-      id: 'item2',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-kaboompics-com-6267.jpg?alt=media&token=b063a5aa-80f7-491f-acb9-91487f2c10b8',
-      title: "CAESAR'S",
-      uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-    },
-    {
-      id: 'item3',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-rachel-claire-6126975.jpg?alt=media&token=049ca9b2-5298-495d-8c85-6f82cb40f1db',
-      title: 'Le Kermel',
-      uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-    },
-    {
-      id: 'item1',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ron-lach-8440065.jpg?alt=media&token=fbe7753d-e119-4e76-8314-7f84a633e925',
-      title: 'La Fourchette',
-      uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-    },
-  ];
-
 const ITEM_WIDTH = 0.7 * windowWidth;
 const SEPARATOR_WIDTH = 10;
 
@@ -65,7 +38,7 @@ export default function Restos(props) {
     return (
       <Pressable activeOpacity={1} style={styles.item} onFocus={() => {carouselRef.current.scrollToIndex(index);}}>
 
-        <Image  style={styles.itemImage} source={{uri: item?.image}} />
+        <Image  style={styles.itemImage} source={{uri: item?.images[0]?.url}} />
 
         <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} style={styles.placeView}>
             <View style={styles.itemDesc}>
@@ -74,9 +47,9 @@ export default function Restos(props) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <Text style={styles.locationDesc}>Dakar, Senegal</Text>
+                    <Text style={styles.locationDesc}>{item?.address}</Text>
                 </View>
-                <Text style={styles.itemName}>{item?.title}</Text>
+                <Text style={styles.itemName}>{item?.name}</Text>
             </View>
             <View style={styles.itemStars}>
                 <Text style={styles.starsNumber}>4/5</Text>
@@ -96,7 +69,7 @@ export default function Restos(props) {
         keyExtractor={item => item?.id}
         style={[styles.carousel, style]}
         ref={carouselRef}
-        data={data}
+        data={props.restaurants}
         renderItem={renderItem}
         itemWidth={ITEM_WIDTH - 50}
         separatorWidth={SEPARATOR_WIDTH + 4}

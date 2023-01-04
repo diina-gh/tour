@@ -104,3 +104,8 @@ export const DeleteHotelMutation = gql`
         }
     }
 `;
+
+export  function getHotels (page, take, filter, orderBy) {
+    const { data, loading, error } = useQuery(HotelsQuery, {variables: { page, take, filter,orderBy },});
+    return {hotelsData: data, hotelsLoading: loading, hotelsError: error}
+}
