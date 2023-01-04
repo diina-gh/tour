@@ -9,6 +9,7 @@ import Hotels from '../../components/sections/Hotels';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getEvents } from '../../graphql/types/event.type';
 import { getCategoryEvents } from '../../graphql/types/categoryEvent.type';
+import Svg, { Path } from "react-native-svg";
 
 const {width: windowWidth} = Dimensions.get('window');
 
@@ -138,9 +139,9 @@ export default function ListEvent({ route, navigation }) {
                 <View className="w-full h-11 bg-[#f4f2ef] rounded-full shadow-inner border border-0.5 border-[#f0f0f0] flex flex-row justify-between px-2.5 py-1 mt-3">
                     <View className="w-[9%] h-full flex flex-col justify-center">
                         <View className="w-6 h-6 -mb-1 self-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 28 28" fill="#ababab">
-                                <path d="M23.707,22.293l-5.969-5.969a10.016,10.016,0,1,0-1.414,1.414l5.969,5.969a1,1,0,0,0,1.414-1.414ZM10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18Z"/>
-                            </svg>
+                            <Svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 28 28" fill="#ababab">
+                                <Path d="M23.707,22.293l-5.969-5.969a10.016,10.016,0,1,0-1.414,1.414l5.969,5.969a1,1,0,0,0,1.414-1.414ZM10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18Z"/>
+                            </Svg>
                         </View>
                     </View>
                     <View className="w-[90%] h-full rounded-lg self-center">

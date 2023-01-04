@@ -39,24 +39,24 @@ export const Header = ({
                 </TouchableOpacity>
             }
             {profil &&
-                <div style={styles.profilContainer}>
+                <View style={styles.profilContainer}>
 
                     <Pressable activeOpacity={1} onPress={() => navigation.navigate('Login')} >
-                        <div style={styles.imageContainer}>
+                        <View style={styles.imageContainer}>
                             <Image style={styles.image} source={{uri: user?.image?.url}} />
-                        </div>
+                        </View>
                     </Pressable>
 
-                    <div style={styles.greetings}>
+                    <View style={styles.greetings}>
                         <Text style={{ fontSize: 12.5, color: 'gray', marginBottom: 3 }}>
                             Bienvenue
                         </Text>
                         <Text style={{ fontSize: 14, fontWeight: 500}}>
                             {user?.firstname + ' ' + user?.lastname}
                         </Text>
-                    </div>
+                    </View>
 
-                </div>
+                </View>
             }
 		</View>
 	)
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     },
 
     greetings: {
-        width: 'fit-content',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',

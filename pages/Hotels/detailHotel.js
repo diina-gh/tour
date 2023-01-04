@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, Touch
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
+import Svg, { Path } from "react-native-svg";
 
 
 const {width, height } = Dimensions.get("window");
@@ -19,8 +20,8 @@ const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.apps
 export default function DetailHotel({route, navigation}) {
 
   const { hotel } = route.params;
-  const [modalVisible, setModalVisible] = useState(false);
   const [chosenImage, setChosenImage] = useState(hotel?.images[0]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getModal = () =>{
       return (
@@ -66,9 +67,9 @@ export default function DetailHotel({route, navigation}) {
                     <Pressable onPress={() => navigation.dispatch(CommonActions.goBack())} activeOpacity={1} className="">
                         <View className="absolute top-5 left-4 flex flex-row justify-center w-10 h-10 bg-white/90 rounded-full shadow">
                             <View className="w-5 h-5 self-center">
-                                <svg className="w-full h-full self-center" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                </svg>
+                                <Svg className="w-full h-full self-center" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <Path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </Svg>
                             </View>
                         </View>
                     </Pressable>
@@ -76,31 +77,15 @@ export default function DetailHotel({route, navigation}) {
                     <View className="bg-white/90 rounded-2xl px-3 py-1.5 absolute top-5 right-4 w-fit flex flex-row" >
                         <Text className="text-gray-800 text-sm font-semibold mr-1 self-center">4/5</Text>
                         <View className="w-5 text-orange-300 self-center">
-                            <svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                            <Svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><Path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></Svg>
                         </View>
                     </View>
 
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="absolute bottom-5 left-0 w-full flex flex-row px-10" >
-
-                        {/* <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg shadow-sm p-0.5 mr-4">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image2}} />
-                        </View>
-
-                        <View className="w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg shadow-sm p-0.5 mr-4">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image1}} />
-                        </View>
-
-                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm mr-4">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image3}} />
-                        </View>
-
-                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image4}} />
-                        </View> */}
-
-                        <FlatList data={hotel?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
-
-                    </ScrollView>
+                    <View className="absolute bottom-5 left-0 w-full flex flex-row px-6">
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full flex flex-row" >
+                            <FlatList data={hotel?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
+                        </ScrollView>
+                    </View>
 
                 </LinearGradient>
 
@@ -109,10 +94,10 @@ export default function DetailHotel({route, navigation}) {
             <View className="w-full flex-col px-4 mt-4" >
                 <View className="flex flex-row">
                     <View className="w-3 text-gray-400 mr-0.5 self-center">
-                        <svg className="w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
+                        <Svg className="w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <Path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></Path>
+                            <Path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></Path>
+                        </Svg>
                     </View>
                     <Text className="text-gray-400 text-[14px] font-medium self-center">{hotel?.address}</Text>
                 </View>

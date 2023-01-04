@@ -9,15 +9,21 @@ export const EventsQuery = gql`
                 id
                 name
                 desc
+                organizedBy
                 activated
-                latitude
-                longitude
                 address
                 date
                 startHours
                 endHours
+                latitude
+                longitude
                 organizedBy
+                createdat
+                updatedat
+                ticketPrice
+                categoryEventId
                 categoryEvent {
+                    id
                     name
                     desc
                 }
@@ -26,8 +32,6 @@ export const EventsQuery = gql`
                     imageref
                     url
                 }
-                createdat
-                updatedat
             }
         }
     }
@@ -56,6 +60,7 @@ export const EventQuery = gql`
                 organizedBy
                 createdat
                 updatedat
+                ticketPrice
                 categoryEventId
                 categoryEvent {
                     id

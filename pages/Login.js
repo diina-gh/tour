@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import { useMutation } from '@apollo/client';
 import { LoginUser } from '../graphql/types/user.type';
 import Styles from '../styles';
+import Svg, { Path } from "react-native-svg";
 
 const imageBg= 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/digital-technology-background-with-hexagon-pattern-white-tone_53876-117566.webp?alt=media&token=402e9cf7-0008-49b1-a225-496bef175351'
 
@@ -60,7 +61,7 @@ export default function Signin() {
                         <View className="w-full h-12 relative">
                             <TextInput secureTextEntry={true}  value={password} onChangeText={(text) => setPassword(text)}  placeholder="**********" className="w-full h-full bg-[#cccccc]/50 shadow-inner rounded-2xl text-base font-medium text-gray-500 px-4"  />
                             <View className="absolute top-4 right-5 w-5 text-gray-500">
-                                <svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>
+                                <Svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><Path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><Path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></Svg>
                             </View>
                         </View>
                     </View>

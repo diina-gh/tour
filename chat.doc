@@ -1,488 +1,231 @@
-// React Native app
-// Here is my App.js
-
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
-import Toast from 'react-native-toast-message';
-import { StatusBar } from 'expo-status-bar';
-import { TailwindProvider } from 'tailwindcss-react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import TabNavigation from './components/navigation/TabNavigation';
-import DetailEvent from './pages/Events/detailEvent';
-import DetailHotel from './pages/Hotels/detailHotel';
-import DetailResto from './pages/Restos/detailResto';
-import DetailProduit from './pages/Restos/detailProduit';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-
-const cache = new InMemoryCache()
-
-const client = new ApolloClient({
-  uri: '..example..,
-  cache,
-  defaultOptions: { watchQuery: { fetchPolicy: 'cache-and-network' } },
-})
-
-
-const Stack = createStackNavigator();
-
-
-export default function App() {
-  return (
-
-
-    <>
-      <ApolloProvider client={client}>
-        <TailwindProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Root" component={TabNavigation} options={{ headerShown: false }} />
-              <Stack.Screen name="DetailEvent" component={DetailEvent} options={{ headerShown: false }} />
-              <Stack.Screen name="DetailHotel" component={DetailHotel} options={{ headerShown: false }} />
-              <Stack.Screen name="DetailResto" component={DetailResto} options={{ headerShown: false }} />
-              <Stack.Screen name="DetailProduit" component={DetailProduit} options={{ headerShown: false }} />
-              <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-              <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </TailwindProvider>
-      </ApolloProvider>
-      <Toast />
-    </>
-
-  );
-}
-
-// Here is my Tab Navigation
-
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { Colors } from '../../utils/colors';
-
-import Home from '../../pages/Home';
-import Favoris from '../../pages/Favoris';
-import Maps from '../../pages/Maps';
-import Profil from '../../pages/Profil';
-import ListHotel from '../../pages/Hotels/listHotel';
-import ListEvent from '../../pages/Events/listEvent';
-import ListResto from '../../pages/Restos/listResto';
-
-import HeartIcon from "../ui/icons/heartIcon";
-import HomeIcon from '../ui/icons/homeIcon';
-import HomeBoldIcon from '../ui/icons/homeBoldIcon';
-import BuildingIcon from '../ui/icons/buildingIcon';
-import BuildingBoldIcon from '../ui/icons/buildingBoldIcon';
-import SodaIcon from '../ui/icons/sodaIcon';
-import SodaBoldIcon from '../ui/icons/sodaBoldIcon';
-import UserIcon from '../ui/icons/userIcon';
-import UserBoldIcon from '../ui/icons/userBoldIcon';
-import CameraIcon from '../ui/icons/cameraIcon';
-import CameraBoldIcon from '../ui/icons/cameraBoldIcon';
-
-const Tab = createMaterialBottomTabNavigator();
-
-export default function TabNavigation() {
-  return (
-    <Tab.Navigator
-    initialRouteName="Home"
-    shifting={true}
-    labeled={false}
-    sceneAnimationEnabled={true}
-    activeColor="#00aea2"
-    inactiveColor="#95a5a6"
-    barStyle={{ backgroundColor: '#fefbf6', elevation: 10 }}
-    screenOptions={({ route }) => ({
-      
-      tabBarIcon: ({ focused, color, size }) => {
-        let icon;
-
-        if (route.name === 'Home') {
-          if(focused) return <HomeBoldIcon size={size} color={color} />;
-          else return <HomeIcon size={size} color={color} />;
-        } 
-        else if (route.name === 'ListHotel') {
-          if(focused) return <BuildingBoldIcon size={size} color={color} />;
-          else return <BuildingIcon size={size} color={color} />;
-        } 
-        else if (route.name === 'ListEvent') {
-          if(focused) return <CameraBoldIcon size={size} color={color} />;
-          else return <CameraIcon size={size} color={color} />;
-        } 
-        else if (route.name === 'ListResto') {
-          if(focused) return <SodaBoldIcon size={size} color={color} />;
-          else return <SodaIcon size={size} color={color} />;
-        } 
-        else if (route.name === 'Profil') {
-          if(focused) return <UserBoldIcon size={size} color={color} />;
-          else return <UserIcon size={size} color={color} />;
-        } 
-
-      },
-      tabBarActiveTintColor: 'white',
-      tabBarInactiveTintColor: 'gray',
-      // tabBarLabel: false,
-
-      
-    })}
-  >
-    <Tab.Screen name="Home" component={Home} />
-    <Tab.Screen name="ListHotel" component={ListHotel} />
-    <Tab.Screen name="ListEvent" component={ListEvent} />
-    <Tab.Screen name="ListResto" component={ListResto} />
-    <Tab.Screen name="Profil" component={Profil} />
-  </Tab.Navigator>
-  );
-}
-
-
-// Here is my Home page
-
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, ActivityIndicator, Alert } from 'react-native';
-import React, {useRef, useState} from 'react';
-import Toast from 'react-native-toast-message';
-import { Header } from '../components/commons/Header';
-import Styles from '../styles';
-import Places from '../components/sections/Places';
-import Events from '../components/sections/Events';
-import Hotels from '../components/sections/Hotels';
-import Restos from '../components/sections/Restos';
-import { gql, useQuery } from '@apollo/client'
-import { PlacesQuery, getPlaces } from '../graphql/types/place.type';
-import { getCategories } from '../graphql/types/category.type';
-import { capitalize } from '../utils/utils';
-import { getEvents } from '../graphql/types/event.type';
-import { getCategoryEvents } from '../graphql/types/categoryEvent.type';
-import { getHotels } from '../graphql/types/hotel.type';
-import { getRestaurants } from '../graphql/types/restaurant.type';
-
-let mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-gray-900 text-sm font-medium"
-let activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-white text-sm font-medium"
-
-export default function Home({ route, navigation }) {
-
-    const [text, setText] = useState("");
-
-    const [page, setPage] = useState(1);
-    const [take, setTake] = useState(10);
-    const [filter, setFilter] = useState(null)
-    const [filterEvent, setFilterEvent] = useState(null)
-    const [direction, setDirection] = useState('asc')
-    const [orderBy, setOrderBy] = useState({"id": direction})
-    const [block, setBlock] = useState(false);
-
-    // Fetch place
-    const {placesData, placesLoading, placesError} = getPlaces(page, take, filter,orderBy)
-    const {categoriesData, categoriesLoading, categoriesError} = getCategories(null, null, null, null)
-    // Fetch events
-    const {eventsData, eventsLoading, eventsError} = getEvents(null, null, filterEvent, null)
-    const {categoryEventsData, categoryEventsLoading, categoryEventsError} = getCategoryEvents(null, null, null, null)
-    // Fetch hotels
-    const {hotelsData, hotelsLoading, hotelsError} = getHotels(null, null, null, null)
-    // Fetch restaurants
-    const {restaurantsData, restaurantsLoading, restaurantsError} = getRestaurants(null, null, null, null)
-
-    function filterByCategory(id, type = 'place'){
-
-        // Toast.show({
-        //     type: 'success',
-        //     text1: 'Hello',
-        //     text2: 'This is some something 👋'
-        //   });
-
-        let newFilter = null
-        switch (type) {
-            case 'place':
-                newFilter = {"activated": null, "query": "", "categoryId": id};
-                setFilter(newFilter)
-                break;
-            case 'event':
-                newFilter = {"activated": null, "query": "", "categoryEventId": id};
-                setFilterEvent(newFilter)
-        }
-    }
-
-    function searchPlace(text){
-        setText(text)
-        let newFilter = {"activated": null, "query": text, "categoryId": null};
-        setFilter(newFilter)
-    }
-
-
-    function renderCategory({item, index}) {
-        return (
-            <Pressable onPress={() => filterByCategory(item.id)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
-                <Text className={item.id == filter?.categoryId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
-            </Pressable>
-        );
-    }
-
-    function renderCategoryEvent({item, index}) {
-        return (
-            <Pressable onPress={() => filterByCategory(item.id, 'event')}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
-                <Text className={item.id == filterEvent?.categoryEventId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
-            </Pressable>
-        );
-    }
-
-    return (
-        <View style={[Styles.container, styles.fontFamily]} >
-
-            <Header
-                profil
-                navigation={navigation}
-                onPressBack={() => navigation.goBack()}
-                // title={route.name}
-                right="more-vertical"
-                onRightPress={() => console.log('right')}
-            />
-
-            <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-4 py-2.5 bg-[#fef9f6]">
-
-                <View className="w-full h-auto">
-            
-                    <Text className="text-xl text-gray-900 font-bold">Visitez les plus beaux endroits du Sénégal </Text>
-
-                </View>
-
-                <View className="w-full h-11 bg-[#f4f2ef] rounded-full shadow-inner border border-0.5 border-[#f0f0f0] flex flex-row justify-between px-2.5 py-1 mt-3">
-                    <View className="w-[9%] h-full flex flex-col justify-center">
-                        <View className="w-6 h-6 -mb-1 self-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 28 28" fill="#ababab">
-                                <path d="M23.707,22.293l-5.969-5.969a10.016,10.016,0,1,0-1.414,1.414l5.969,5.969a1,1,0,0,0,1.414-1.414ZM10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18Z"/>
-                            </svg>
-                        </View>
-                    </View>
-                    <View className="w-[90%] h-full rounded-lg self-center">
-                        <TextInput
-                            className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
-                            onChangeText={value => searchPlace(value)}
-                            placeholder="Rechercher un site ..."
-                            value={text}
-                        />
-                    </View>
-                </View>
-
-                <View className="w-full mt-4">
-
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1">
-                        <Pressable onPress={() => filterByCategory(null)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
-                            <Text className={filter?.categoryId == null ? activeCategory: mutedCategory}>Tout</Text>
-                        </Pressable>
-                        <FlatList data={categoriesData?.categories?.categories} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
-                    </ScrollView>
-
-                    {placesLoading ? (
-                        <View style={styles.loadingContainer} className="py-40">
-                            <ActivityIndicator size="large" color="#b1b1b1" />
-                        </View>
-                    ) : (
-
-                        <Places navigation={navigation} places={placesData?.places?.places}  />
-
-                    )}
-
-                </View>
-
-                <View className="w-full mt-2">
-
-                    <View className="w-full flex flex-row justify-between">
-                        <Text className="text-lg font-semibold self-center">Evènements à venir</Text>
-                        <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
-                    </View>
-
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full h-full py-1 mt-2">
-                        <Pressable onPress={() => filterByCategory(null, 'event')}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
-                            <Text className={filterEvent?.categoryEventId == null ? activeCategory: mutedCategory}>Tout</Text>
-                        </Pressable>
-                        <FlatList data={categoryEventsData?.categoryEvents?.categoryEvents} renderItem={renderCategoryEvent} keyExtractor={item => item.id} horizontal={true} />
-                    </ScrollView>
-
-                    {eventsLoading ? (
-                        <View style={styles.loadingContainer} className="py-24">
-                            <ActivityIndicator size="large" color="#b1b1b1" />
-                        </View>
-                    ) : (
-
-                        <Events navigation={navigation} events={eventsData?.events?.events} />
-
-                    )}
-
-                </View>
-
-                <View className="w-full">
-
-                    <View className="w-full flex flex-row justify-between">
-                        <Text className="text-lg font-semibold self-center">Meilleurs hôtels</Text>
-                        <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
-                    </View>
-
-                    {hotelsLoading ? (
-                        <View style={styles.loadingContainer} className="py-24">
-                            <ActivityIndicator size="large" color="#b1b1b1" />
-                        </View>
-                    ) : (
-                        <Hotels navigation={navigation} hotels={hotelsData?.hotels?.hotels} />
-                    )}
-
-                </View>
-
-                <View className="w-full">
-
-                    <View className="w-full flex flex-row justify-between">
-                        <Text className="text-lg font-semibold self-center">Top des restaurants</Text>
-                        <Text className="text-base font-medium text-[#e16728] underline self-center">Voir+</Text>
-                    </View>
-
-                    {restaurantsLoading ? (
-                        <View style={styles.loadingContainer} className="py-24">
-                            <ActivityIndicator size="large" color="#b1b1b1" />
-                        </View>
-                    ) : (
-                        <Restos navigation={navigation} restaurants={restaurantsData?.restaurants?.restaurants} />
-                    )}
-
-                </View>
-
-            </ScrollView>
-
-
-        </View>
-
-
-    );
-}
-
-const styles = StyleSheet.create({
-    fontFamily: {
-        fontFamily: 'lucida grande',
-    },
-
-});
-
-
-
-// Here is the graphql login mutation
-
-export const LoginUser = gql`
-    mutation Login($email: String, $password: String) {
-        login(email: $email, password: $password) {
-            ... on AuthPayload {
-                token
-                user {
+// This is a React Native app
+// Here is is my events query
+
+export const EventsQuery = gql`
+    query Events($page: Int, $take: Int, $filter: EventFilterInput, $orderBy: EventOrderInput) {
+        __typename
+        events(page: $page, take: $take, filter: $filter, orderBy: $orderBy) {
+            count
+            events {
+                id
+                name
+                desc
+                organizedBy
+                activated
+                address
+                date
+                startHours
+                endHours
+                latitude
+                longitude
+                organizedBy
+                createdat
+                updatedat
+                ticketPrice
+                categoryEventId
+                categoryEvent {
                     id
-                    civility
-                    email
-                    phonenumber
-                    firstname
-                    lastname
-                    activated
-                    createdat
-                    updatedat
-                    roleOnUsers {
-                        role {
-                            id
-                            name
-                        }
-                    }
-                    image {
-                        id
-                        imageref
-                        url
-                    }
+                    name
+                    desc
+                }
+                images {
+                    id
+                    imageref
+                    url
                 }
             }
         }
     }
-`;
-
-// Here is the login page
-
-import * as React from 'react';
-import { Dimensions, StyleSheet, Pressable, Text, TextInput,  View, Image } from 'react-native';
-import Styles from '../styles';
-
-const imageBg= 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/digital-technology-background-with-hexagon-pattern-white-tone_53876-117566.webp?alt=media&token=402e9cf7-0008-49b1-a225-496bef175351'
-
-const {width: windowWidth} = Dimensions.get('window');
-const top_margin = 0.275 * windowWidth;
+`
+;
 
 
-export default function Signup() {
+
+// Here is my Detail Event page
+
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { CommonActions } from '@react-navigation/native';
+import Modal from "react-native-modalbox";
+import { getDay, getMonth } from '../../utils/utils';
+
+
+const {width, height } = Dimensions.get("window");
+let mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
+let activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg p-0.5";
+
+export default function DetailEvent({route, navigation}) {
+
+  const { event } = route.params;
+  const [chosenImage, setChosenImage] = useState(event?.images[0]);
+  
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const getModal = () =>{
+      return (
+        <Modal
+          entry="bottom"
+          backdropPressToClose={true}
+          isOpen={modalVisible}
+          style={styles.modalBox}
+          onClosed={() => setModalVisible(false)}
+        >
+          <View style={styles.content}>
+            <Text style={styles.textStyle}>AndroidVille</Text>
+          </View>
+        </Modal>
+      );
+  };
+
+  function renderGalerie({item, index}) {
     return (
-        <View style={[Styles.container, styles.fontFamily]} className="relative w-full h-full">
+        <Pressable onPress={() => setChosenImage(item)}  activeOpacity={1} className="mr-4 rounded-lg shadow-sm">
+            <View className={item?.url == chosenImage?.url ? activeImage : mutedImage}>
+                <Image className="w-full h-full object-cover rounded-lg" source={{uri: item?.url}} />
+            </View>
+        </Pressable>
+    );
+   }
 
-            <Image className="w-full h-full object-cover" source={{uri: imageBg}} />
 
-            <View className="absolute top-0 left-0 w-full h-full px-5">
+  return (
 
-                <Text style={{marginTop: top_margin}} className="text-2xl font-bold text-[#0b0b0b]">Se connecter</Text>
-                <Text className="text-base font-medium text-gray-800 mt-2">Connectez-vous à votre compte.</Text>
+    <View style={[styles.fontFamily]} className="relative w-full h-full" >
 
-                <View className="w-full mt-6">
+        <ScrollView className="w-full h-[0px] bg-[#fef9f6]" horizontal={false} showsVerticalScrollIndicator={false}>
 
-                    <View className="mb-2">
-                        <Text className="text-[16.5px] font-semibold text-gray-800 mb-1.5">Adresse email</Text>
-                        <TextInput placeholder="Adresse email"  className="w-full h-12 bg-[#cccccc]/50 shadow-inner rounded-2xl text-base font-medium text-gray-500 px-4 mb-4"/>
+            <View className="relative w-full h-96 bg-stone-100">
+                
+                <Image className="w-full h-full object-cover" source={{uri: chosenImage?.url}} />
+                
+                <LinearGradient className="absolute top-0 left-0 w-full h-full" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
+                    
+                    <View className="absolute bottom-5 left-6" >
+                        <Text className="text-md text-gray-400 font-normal">{event?.categoryEvent?.name?.toUpperCase()}</Text>
+                        <Text className="text-xl text-white font-semibold">{event?.name}</Text>
+                        <Text className="text-xs text-gray-200 font-light">{event?.organizedBy}</Text>
                     </View>
 
-                    <View className="">
-                        <Text className="text-[16.5px] font-semibold text-gray-800 mb-1.5">Mot de passe</Text>
-                        <View className="w-full h-12 relative">
-                            <TextInput secureTextEntry={true} placeholder="**********" className="w-full h-full bg-[#cccccc]/50 shadow-inner rounded-2xl text-base font-medium text-gray-500 px-4"  />
-                            <View className="absolute top-4 right-5 w-5 text-gray-500">
-                                <svg className="w-full" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>
+                    <Pressable onPress={() => navigation.dispatch(CommonActions.goBack())} activeOpacity={1} className="">
+                        <View className="absolute top-5 left-4 flex flex-row justify-center w-10 h-10 bg-white/90 rounded-full shadow">
+                            <View className="w-5 h-5 self-center">
+                                <Svg className="w-full h-full self-center" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <Path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </Svg>
                             </View>
                         </View>
-                    </View>
-                    
-                    <Text className="w-full text-right text-base font-semibold text-[#0b0b0b] underline mt-2">Mot de passe oublié ?</Text>
+                    </Pressable>
 
+                    <View className="bg-white/90 rounded-lg h-fit w-fit flex flex-col items-center px-[8px] py-1 absolute top-5 right-4">
+                        <Text className="text-[14.5px] font-semibold text-[#0b0b0b]">{getDay(event?.date)}</Text>
+                        <Text className="text-[12px] font-normal text-gray-500">{getMonth(event?.date)}</Text>
+                    </View>
+
+                </LinearGradient>
+
+            </View>
+
+            <View className="absolute bottom-5 left-0 w-full flex flex-row px-6">
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full flex flex-row" >
+                    <FlatList data={event?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
+                </ScrollView>
+            </View>
+
+            <View className="w-full flex flex-row px-4 mt-4">
+                <View className="flex flex-col mr-5">
+                    <Text className="text-lg font-medium text-[#e16728]">Description</Text>
+                    <View className="w-20 h-[2px] bg-[#e16728] transition duration-700 ease-in-out mt-[1px] "></View>
+                </View>
+               
+            </View>
+
+            <View className="px-4 mb-24">
+
+                <View className="flex flex-col mt-4">
+                    <Text className="text-base text-gray-700 font-medium">
+                        {event?.desc}
+                    </Text>
                 </View>
 
-                <Pressable className="w-full h-[55px] bg-[#0b0b0b] rounded-2xl shadow mt-8">
-                    <View className="w-full h-full flex-col justify-center">
-                        <Text className="w-full text-center text-[20px] font-semibold text-gray-50">S'inscrire</Text>
-                    </View>
-                </Pressable>
+                <View className="w-full flex flex-row mt-4">
 
-                <View className="w-full flex flex-col items-center mt-5">
-                    <Text className="text-base font-medium text-gray-800 mt-3">Vous n'avez pas de compte ?</Text>
-                    <Text className="text-lg font-semibold text-[#0b0b0b] underline mt-0.5">S'inscrire</Text>
+                    <View className="flex flex-col items-center mr-4">
+                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
+                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">{event?.startHours}</Text>
+                    </View>
+
+                    <View className="flex flex-col items-center mr-4">
+                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
+                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">{event?.endHours}</Text>
+                    </View>
+
+                    <View className="flex flex-col items-center mr-4">
+                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
+                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">{event?.ticketPrice} XOF</Text>
+                    </View>
+                    
+                </View>
+
+                <View className="w-full flex flex-col mt-5 mb-4">
+
+                    <View></View>
+
+                    <View className="w-full h-52 bg-slate-300 rounded-xl"></View>
+                    
                 </View>
 
             </View>
 
+
+        </ScrollView>
+
+        <View className="w-full h-[80px] bg-[#fefaf9] shadow rounded-t-2xl absolute bottom-0 left-0 z-10 px-6 py-3">
+            <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                <Text className="text-xl text-white font-semibold self-center">Participer</Text>
+            </TouchableOpacity>
         </View>
-    );
+
+        {getModal()}
+
+    </View>
+  );
 }
 
-
 const styles = StyleSheet.create({
+
     fontFamily: {
         fontFamily: 'lucida grande',
     },
 
+    modalBox: {
+        overflow: "hidden",
+        alignItems: "center",
+        justifyContent: "center",
+        height,
+        width,
+        backgroundColor: "transparent"
+    },
+
+    content: {
+        position: "absolute",
+        bottom: 0,
+        width: '100%',
+        height: 375,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fefaf9",
+        zIndex: 1000,
+    },
+
+    textStyle: {
+        fontSize: 22
+    }
+
 });
 
 
-
-// I corrected the login mutation
-
-mutation Login($email: String, $password: String) {
-  login(email: $email, password: $password) {
-    ... on AuthPayload {
-      token
-      user {
-        id
-        lastname
-      }
-    }
-    ... on InputError {
-      message
-    }
-  }
-}
-
-// Now If the mutation return an InputError, we have to show an error toast which as text the message in the inputError
-// And if the mutation return an AuthPayload, we have to authenticate the user using AsyncStorage from 'react-native', save the user important information in the storage and redirect him to the home page.
+// I also have a google map api token
+// I want to display in a view the cart of the location of the event 
