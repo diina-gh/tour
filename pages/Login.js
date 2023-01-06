@@ -6,6 +6,7 @@ import { LoginUser } from '../graphql/types/user.type';
 import Styles from '../styles';
 import Svg, { Path } from "react-native-svg";
 
+
 const imageBg= 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/digital-technology-background-with-hexagon-pattern-white-tone_53876-117566.webp?alt=media&token=402e9cf7-0008-49b1-a225-496bef175351'
 
 const {width: windowWidth} = Dimensions.get('window');

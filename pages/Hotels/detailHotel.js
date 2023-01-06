@@ -1,49 +1,115 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList, TextInput, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import Svg, { Path } from "react-native-svg";
-import DropDownPicker from 'react-native-dropdown-picker';
 import CalendarPicker from 'react-native-calendar-picker';
+import { getHotelRoomTypes } from '../../graphql/types/hotelRoomType.type';
+import { capitalize } from '../../utils/utils';
+import { useMutation } from '@apollo/client';
+import { SaveHotelReservation } from '../../graphql/types/hotelReservation.type';
+import Toast from 'react-native-toast-message';
+
 
 const {width, height } = Dimensions.get("window");
-let mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
-let activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg p-0.5";
+const mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
+const activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg p-0.5";
+const mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-gray-900 text-sm font-medium"
+const activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-white text-sm font-medium"
 
 export default function DetailHotel({route, navigation}) {
 
   const { hotel } = route.params;
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const [chosenImage, setChosenImage] = useState(hotel?.images[0]);
   const [modalVisible, setModalVisible] = useState(false);
 
   //Booking variables
   const minDate = new Date(); // Today
-  const [nbPersons, setNbPersons] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
-  ]);
+  const [nbPersons, setNbPersons] = useState(1);
+  const [hotelRoomTypeId, setHotelRoomTypeId] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  // Fetch hotelRoomTypes
+  const {hotelRoomTypesData, hotelRoomTypesLoading, hotelRoomTypesError} = getHotelRoomTypes(null,null,null,null)
+
+  function changeDate(date, type) {
+    if (type === 'START_DATE') setStartDate(date.format('YYYY-MM-DD'))
+    if (type === 'END_DATE') setEndDate(date.format('YYYY-MM-DD'))
+  }
+
+  const [saveHotelReservation, { loading: mutationLoading, error: mutationError }] = useMutation(SaveHotelReservation);
+
+  async function onBook() {
+    if(mutationLoading) return null;
+    try {
+      const result = await saveHotelReservation({
+        variables: {
+          id: null,
+          hotelId: hotel.id,
+          userId: user.id,
+          hotelRoomTypeId: hotelRoomTypeId,
+          startDate: startDate,
+          endDate: endDate,
+          nbPersons: parseInt(nbPersons) 
+        }
+      });
+      if (result.data) {
+        if (result.data.saveHotelReservation.__typename === 'InputError') {
+          // An input error occurred, display an error message to the user
+          Toast.show({type: 'error',text1: 'Error', text2: result.data.saveHotelReservation.message, visibilityTime: 2500,});
+        } else if (result.data.saveHotelReservation.__typename === 'HotelReservation') {
+          // Mutation was successful, show a success message and navigate the user back to the list of hotels
+          Toast.show({type: 'success', text1: 'Réservation', text2: 'Reservation saved!', visibilityTime: 2500,});
+          navigation.dispatch(CommonActions.goBack({key: "ListHotel",})
+          );
+        }
+      }
+    } catch (e) {
+      // An error occurred, display an error message to the user
+      console.error(e);
+      alert(e.message);
+    }
+  }
+  
+
+  function renderRoomType({item, index}) {
+    return (
+        <Pressable onPress={() => setHotelRoomTypeId(item.id)}  activeOpacity={1} className="min-w-fit mr-3 mb-0.5">
+            <Text className={item.id == hotelRoomTypeId  ? activeCategory: mutedCategory}>{capitalize(item?.roomType?.name)}</Text>
+        </Pressable>
+    );
+  }
 
   const getModal = () =>{
       return (
         <Modal entry="bottom" backdropPressToClose={true} isOpen={modalVisible} style={styles.modalBox} onClosed={() => setModalVisible(false)}>
-          <View style={styles.content} className="w-full h-full pb-16">
+          <View style={styles.content} className="relative w-full h-full pb-16">
+
+            {mutationLoading && (
+                <View className="absolute top-0 left-0 w-full h-full bg-gray-300/50 rounded-t-[25] z-40 items-center justify-center">
+                    <ActivityIndicator size="large" color="#9d9d9d" />
+                </View>        
+            )}
+
             <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-6 py-8">
 
                 <Text className="text-2xl font-bold text-[#0b0b0b]">Réservation</Text>
                 <Text className="text-base font-medium text-gray-700 mt-2">Réservez votre chambre d'hôtel en toute simplicité.</Text>
                 
                 <View className="mt-6 z-20">
-                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-2">Type de chambre</Text>
-                    <DropDownPicker className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-base font-medium text-gray-800 px-4 z-20" placeholder='Choisir un type de chambre' placeholderStyle={{ fontWeight: "500", fontSize: '15px'}} open={open} value={value} items={items} setOpen={setOpen} setValue={setValue} setItems={setItems} />
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-3">Type de chambre</Text>
+                    <FlatList data={hotelRoomTypesData?.hotelRoomTypes?.hotelRoomTypes} renderItem={renderRoomType} scrollEnabled={true} showsHorizontalScrollIndicator={false} keyExtractor={item => item.id} horizontal={true} />
+
+                    {/* <DropDownPicker className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-base font-medium text-gray-800 px-4 z-20" placeholder='Choisir un type de chambre' placeholderStyle={{ fontWeight: "500", fontSize: '15px'}} open={open} value={hotelRoomTypeId} items={items} setOpen={setOpen} setValue={setHotelRoomTypeId} /> */}
                 </View>
 
                 <View className="mt-6">
                     <Text className="text-[16.5px] font-semibold text-gray-800 mb-2">Nombre de personnes</Text>
-                    <TextInput type='number' value={nbPersons} onChangeText={(text) => setNbPersons(text)} placeholder="Nombre de personne"  className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-[15px] font-[500] text-gray-900 px-4 border border-gray-900"/>
+                    <TextInput keyboardType="number" inputType="number" value={nbPersons} onChangeText={(text) => setNbPersons(text)} placeholder="Nombre de personne"  className="w-full h-11 bg-white shadow-inner rounded-2xl text-[15px] font-[500] text-gray-900 px-4 border border-gray-900"/>
                 </View>
 
                 <View className="relative mt-6 w-full">
@@ -56,7 +122,7 @@ export default function DetailHotel({route, navigation}) {
                         todayBackgroundColor="#aeaeae"
                         selectedDayColor="#333333"
                         selectedDayTextColor="#FFFFFF"
-                        // onDateChange={this.onDateChange}
+                        onDateChange={(date, type) => changeDate(date,type)}
                         weekdays={['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Van.', 'Sam.', 'Dim.']}
                         months={['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']}
                         previousTitle="←"
@@ -81,10 +147,6 @@ export default function DetailHotel({route, navigation}) {
    }
 
   return (
-    // <View style={styles.container}>
-    //   <Button title="Press Me!" onPress={() => setModalVisible(true)} />
-    //   {getModal()}
-    // </View>
     <View style={[styles.fontFamily]} className="relative w-full h-full" >
 
         <ScrollView className="w-full h-[0px] bg-[#fef9f6]" horizontal={false} showsVerticalScrollIndicator={false}>
@@ -192,7 +254,7 @@ export default function DetailHotel({route, navigation}) {
                     <Text className="text-xl text-white font-semibold self-center">Réserver</Text>
                 </TouchableOpacity>
                 :
-                <TouchableOpacity onPress={null} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                <TouchableOpacity onPress={onBook} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
                     <Text className="text-xl text-white font-semibold self-center">Valider</Text>
                 </TouchableOpacity>
             }
@@ -224,9 +286,9 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: '100%',
-        height: 450,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
+        height: 455,
+        borderTopLeftRadius: '25px',
+        borderTopRightRadius: '25px',
         // justifyContent: "center",
         // alignItems: "center",
         backgroundColor: "#fefaf9",
