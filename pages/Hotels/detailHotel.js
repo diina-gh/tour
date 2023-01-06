@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import Svg, { Path } from "react-native-svg";
-
+import DropDownPicker from 'react-native-dropdown-picker';
+import CalendarPicker from 'react-native-calendar-picker';
 
 const {width, height } = Dimensions.get("window");
 let mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
 let activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg p-0.5";
-
-const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-thorsten-technoman-338504.jpg?alt=media&token=4d92b49b-e524-407d-8697-9a2e45cdc8e7"
-const image2 = 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-pixabay-276671.jpg?alt=media&token=869bf7b1-8de1-44f1-aa98-396cd352efe4'
-
-const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-pixabay-261169.jpg?alt=media&token=2853439f-21f2-48d8-8b32-6d75536a6fb5"
-const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-kelly-2869215.jpg?alt=media&token=5a7135ad-c31b-4bc5-83e6-987cf9573124"
-
 
 export default function DetailHotel({route, navigation}) {
 
@@ -23,17 +17,54 @@ export default function DetailHotel({route, navigation}) {
   const [chosenImage, setChosenImage] = useState(hotel?.images[0]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  //Booking variables
+  const minDate = new Date(); // Today
+  const [nbPersons, setNbPersons] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
+
   const getModal = () =>{
       return (
-        <Modal
-          entry="bottom"        
-          backdropPressToClose={true}
-          isOpen={modalVisible}
-          style={styles.modalBox}
-          onClosed={() => setModalVisible(false)}
-        >
-          <View style={styles.content}>
-            <Text style={styles.textStyle}>AndroidVille</Text>
+        <Modal entry="bottom" backdropPressToClose={true} isOpen={modalVisible} style={styles.modalBox} onClosed={() => setModalVisible(false)}>
+          <View style={styles.content} className="w-full h-full pb-16">
+            <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-6 py-8">
+
+                <Text className="text-2xl font-bold text-[#0b0b0b]">Réservation</Text>
+                <Text className="text-base font-medium text-gray-700 mt-2">Réservez votre chambre d'hôtel en toute simplicité.</Text>
+                
+                <View className="mt-6 z-20">
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-2">Type de chambre</Text>
+                    <DropDownPicker className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-base font-medium text-gray-800 px-4 z-20" placeholder='Choisir un type de chambre' placeholderStyle={{ fontWeight: "500", fontSize: '15px'}} open={open} value={value} items={items} setOpen={setOpen} setValue={setValue} setItems={setItems} />
+                </View>
+
+                <View className="mt-6">
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-2">Nombre de personnes</Text>
+                    <TextInput type='number' value={nbPersons} onChangeText={(text) => setNbPersons(text)} placeholder="Nombre de personne"  className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-[15px] font-[500] text-gray-900 px-4 border border-gray-900"/>
+                </View>
+
+                <View className="relative mt-6 w-full">
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-2.5">Période de votre séjour</Text>
+                    <CalendarPicker
+                        minDate={minDate}
+                        width={345}
+                        startFromMonday={true}
+                        allowRangeSelection={true}
+                        todayBackgroundColor="#aeaeae"
+                        selectedDayColor="#333333"
+                        selectedDayTextColor="#FFFFFF"
+                        // onDateChange={this.onDateChange}
+                        weekdays={['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Van.', 'Sam.', 'Dim.']}
+                        months={['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']}
+                        previousTitle="←"
+                        nextTitle="→"
+                    />
+                </View>
+
+            </ScrollView>
           </View>
         </Modal>
       );
@@ -156,9 +187,16 @@ export default function DetailHotel({route, navigation}) {
         </ScrollView>
 
         <View className="w-full h-[80px] bg-[#fefaf9] shadow rounded-t-2xl absolute bottom-0 left-0 z-10 px-6 py-3">
-            <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
-                <Text className="text-xl text-white font-semibold self-center">Réserver</Text>
-            </TouchableOpacity>
+            {!modalVisible ?
+                <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                    <Text className="text-xl text-white font-semibold self-center">Réserver</Text>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity onPress={null} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                    <Text className="text-xl text-white font-semibold self-center">Valider</Text>
+                </TouchableOpacity>
+            }
+
         </View>
 
         {getModal()}
@@ -186,11 +224,11 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: '100%',
-        height: 375,
+        height: 450,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
         backgroundColor: "#fefaf9",
         zIndex: 1000,
     },

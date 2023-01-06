@@ -1,16 +1,17 @@
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions } from 'react-native';
+import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
 import * as React from 'react';
 import { useState } from 'react';
 import { Header } from '../../components/commons/Header';
 import Styles from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
-import { gql, useQuery } from '@apollo/client'
-import { getRestaurants, RestaurantsQuery } from '../../graphql/types/restaurant.type';
+import { getRestaurants } from '../../graphql/types/restaurant.type';
 import { getCategoryMenus } from '../../graphql/types/categoryMenu.type';
 import Svg, { Path } from "react-native-svg";
 
 export default function ListResto({ route, navigation }) {
 
+    // Fetch states
+    const [text, setText] = useState("");
     const [page, setPage] = useState(1);
     const [take, setTake] = useState(10);
     const [filter, setFilter] = useState(null)
@@ -18,20 +19,17 @@ export default function ListResto({ route, navigation }) {
     const [orderBy, setOrderBy] = useState({"id": direction})
     const [block, setBlock] = useState(false);
 
-    const [text, onChangeText] = React.useState("");
-
-    // const { data, loading, error } = useQuery(RestaurantsQuery, {variables: { page, take, filter,orderBy },});
+    // Fetch restaurants
     const {restaurantsData, restaurantsLoading, restaurantsError} = getRestaurants(page, take, filter,orderBy)
-    
-    if(restaurantsLoading) console.log("...")
-    if(restaurantsData) console.log("restaurant:query:restaurantsData => ", restaurantsData)
-    if(restaurantsError) console.log("restaurant:query:restaurantsError => ", restaurantsError)
-
+    // Fetch category menus
     const {categoryMenusData, categoryMenusLoading, categoryMenusError} = getCategoryMenus(page, take, filter,orderBy)
 
-    if(categoryMenusLoading) console.log("...")
-    if(categoryMenusData) console.log("categoryMenu:query:categoryMenusData => ", categoryMenusData)
-    if(categoryMenusError) console.log("categoryMenu:query:categoryMenusError => ", categoryMenusError)
+    // Search Items
+    function searchItem(text){
+        setText(text)
+        let newFilter = {"activated": null, "query": text};
+        setFilter(newFilter)
+    }
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -63,7 +61,7 @@ export default function ListResto({ route, navigation }) {
                     <View className="w-[90%] h-full rounded-lg self-center">
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
-                            onChangeText={onChangeText}
+                            onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un restaurant ..."
                             value={text}
                         />
@@ -72,11 +70,13 @@ export default function ListResto({ route, navigation }) {
 
                 <View className="w-full mt-5">
 
-                    <FlatList
-                        data={restaurantsData?.restaurants?.restaurants}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    />
+                    {restaurantsLoading ? (
+                        <View className="py-40">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+                        <FlatList data={restaurantsData?.restaurants?.restaurants} renderItem={renderItem} keyExtractor={item => item.id} />
+                    )}
 
                 </View>
 
@@ -124,8 +124,6 @@ export default function ListResto({ route, navigation }) {
           </Pressable>
         );
       }
-
-
 
 }
 

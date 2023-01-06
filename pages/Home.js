@@ -7,8 +7,7 @@ import Places from '../components/sections/Places';
 import Events from '../components/sections/Events';
 import Hotels from '../components/sections/Hotels';
 import Restos from '../components/sections/Restos';
-import { gql, useQuery } from '@apollo/client'
-import { PlacesQuery, getPlaces } from '../graphql/types/place.type';
+import { getPlaces } from '../graphql/types/place.type';
 import { getCategories } from '../graphql/types/category.type';
 import { capitalize } from '../utils/utils';
 import { getEvents } from '../graphql/types/event.type';
@@ -24,14 +23,12 @@ let activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 round
 export default function Home({ route, navigation }) {
 
     const [text, setText] = useState("");
-
     const [page, setPage] = useState(1);
     const [take, setTake] = useState(10);
     const [filter, setFilter] = useState(null)
     const [filterEvent, setFilterEvent] = useState(null)
     const [direction, setDirection] = useState('asc')
     const [orderBy, setOrderBy] = useState({"id": direction})
-    const [block, setBlock] = useState(false);
 
     // Fetch place
     const {placesData, placesLoading, placesError} = getPlaces(page, take, filter,orderBy)
@@ -45,13 +42,6 @@ export default function Home({ route, navigation }) {
     const {restaurantsData, restaurantsLoading, restaurantsError} = getRestaurants(null, null, null, null)
 
     function filterByCategory(id, type = 'place'){
-
-        // Toast.show({
-        //     type: 'success',
-        //     text1: 'Hello',
-        //     text2: 'This is some something 👋'
-        //   });
-
         let newFilter = null
         switch (type) {
             case 'place':

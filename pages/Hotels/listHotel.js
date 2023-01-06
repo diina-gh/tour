@@ -1,57 +1,33 @@
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions } from 'react-native';
-import * as React from 'react';
+import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
+import React, {useRef, useState} from 'react';
 import { Header } from '../../components/commons/Header';
 import Styles from '../../styles';
-import Places from '../../components/sections/Places';
-import Events from '../../components/sections/Events';
-import Hotels from '../../components/sections/Hotels';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from "react-native-svg";
+import { getHotels } from '../../graphql/types/hotel.type';
 
-
-const {width: windowWidth} = Dimensions.get('window');
-
-const data = [
-    {
-      id: 'item6',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-thorsten-technoman-338504.jpg?alt=media&token=4d92b49b-e524-407d-8697-9a2e45cdc8e7',
-      title: 'Hotel Riu Baobab',
-      uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-    },
-    {
-      id: 'item2',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/33075123.jpeg?alt=media&token=9990eeb4-d38e-43a1-85a5-e85a145e5109',
-      title: 'Terrou-Bi',
-      uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-    },
-    {
-      id: 'item3',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/55472295_-VmXnOnzPz1EYBje8D3onqo7Ey16KEp4TfHzqyXaRm0.jpeg?alt=media&token=f790f246-f132-47aa-9d2a-36942aabea2c',
-      title: 'Radisson Blu Hotel',
-      uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-    },
-    {
-      id: 'item1',
-      image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/vue-des-piscines-lage.jpeg?alt=media&token=d7f9b82d-6760-4847-ab00-36ebd12bde03',
-      title: 'Pullman Dakar Teranga',
-      uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-    },
-  ];
   
-
-const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-frank-k-1808975.jpg?alt=media&token=570fec41-144b-4729-996f-69d724c84e0d"
-const image2 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-aviz-3531070.jpg?alt=media&token=2ab8f434-a7e8-4408-b863-907c0e5d7fcf"
-const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ludmilla-diniz-3766344.jpg?alt=media&token=7d03b0aa-d4ac-44d5-9dd9-6ec4e60c9e07"
-
 export default function ListHotel({ route, navigation }) {
 
-    const [text, onChangeText] = React.useState("");
+    // States
+    const [text, setText] = useState("");
+    const [filter, setFilter] = useState(null)
+
+    // Fetch hotels
+    const {hotelsData, hotelsLoading, hotelsError} = getHotels(null, null, filter, null)
+
+    // Search Items
+    function searchItem(text){
+        setText(text)
+        let newFilter = {"activated": null, "query": text};
+        setFilter(newFilter)
+    }
 
     function renderItem({item, index}) {
         return (
-          <Pressable activeOpacity={1} onPress={() => navigation.navigate('DetailHotel', { name: 'Jane' })} className="relative w-full h-64 rounded-2xl mb-5">
+          <Pressable activeOpacity={1} onPress={() => navigation.navigate('DetailHotel', {hotel: item})} className="relative w-full h-64 rounded-2xl mb-5">
     
-            <Image className="w-full h-full rounded-2xl" source={{uri: item?.image}} />
+            <Image className="w-full h-full rounded-2xl" source={{uri: item?.images[0]?.url}} />
     
             <LinearGradient className="absolute top-0 left-0 w-full h-full rounded-2xl" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
                 
@@ -63,9 +39,9 @@ export default function ListHotel({ route, navigation }) {
                                 <Path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></Path>
                             </Svg>
                         </View>
-                        <Text className="text-gray-200 text-sm font-medium self-center">Dakar, Senegal</Text>
+                        <Text className="text-gray-200 text-sm font-medium self-center">{item?.address}</Text>
                     </View>
-                    <Text className="text-xl text-white font-semibold">{item?.title}</Text>
+                    <Text className="text-xl text-white font-semibold">{item?.name}</Text>
                 </View>
 
                 {/* <View className="absolute top-7 left-6 flex flex-row text-[16.5px] text-white font-semibold">
@@ -115,31 +91,26 @@ export default function ListHotel({ route, navigation }) {
                     <View className="w-[90%] h-full rounded-lg self-center">
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
-                            onChangeText={onChangeText}
+                            onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un hôtel ..."
                             value={text}
                         />
                     </View>
                 </View>
 
-                <View className="w-full mt-5">
-
-                    {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full py-1 mb-4">
-                        <View className="w-24 min-w-fit h-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium  ">Tout</View>
-                        <View className="w-24 min-w-fith-fit px-2 py-1 mr-3 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-base font-medium  ">Musique</View>
-                        <View className="w-24 min-w-fit h-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium  ">Sport</View>
-                        <View className="w-24 min-w-fit h-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium  ">Education</View>
-                        <View className="w-24 min-w-fit h-fit px-2 py-1 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-base font-medium  ">Culture</View>
-                    </ScrollView> */}
-
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    />
-
-                </View>
-
+                {hotelsLoading ? (
+                    <View style={styles.loadingContainer} className="py-40">
+                        <ActivityIndicator size="large" color="#b1b1b1" />
+                    </View>
+                ) : (
+                    <View className="w-full mt-5">
+                        <FlatList
+                            data={hotelsData?.hotels?.hotels}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.id}
+                        />
+                    </View>
+                )}
 
             </ScrollView>
 

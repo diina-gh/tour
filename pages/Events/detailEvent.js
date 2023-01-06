@@ -5,8 +5,6 @@ import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import { getDay, getMonth } from '../../utils/utils';
 import Svg, { Path } from "react-native-svg";
-import MapboxGL from '@rnmapbox/maps';
-MapboxGL.setAccessToken(process.env.MAPBOX_TOKEN);
 
 
 const {width, height } = Dimensions.get("window");
@@ -17,7 +15,6 @@ export default function DetailEvent({route, navigation}) {
 
   const { event } = route.params;
   const [chosenImage, setChosenImage] = useState(event?.images[0]);
-  
   const [modalVisible, setModalVisible] = useState(false);
 
   const getModal = () =>{
@@ -45,8 +42,6 @@ export default function DetailEvent({route, navigation}) {
         </Pressable>
     );
    }
-
-   const accessToken = process.env.MAPBOX_TOKEN;
 
 
   return (
@@ -132,7 +127,6 @@ export default function DetailEvent({route, navigation}) {
                     <View></View>
 
                     <View className="w-full h-52 bg-slate-300 rounded-xl" >
-                        <MapboxGL.MapView style={styles.map} />
                     </View>
                     
                 </View>
@@ -184,6 +178,10 @@ const styles = StyleSheet.create({
 
     textStyle: {
         fontSize: 22
+    },
+
+    map: {
+        flex: 1,
     }
 
 });

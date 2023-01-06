@@ -1,6 +1,5 @@
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions } from 'react-native';
-import * as React from 'react';
-import { useState } from 'react';
+import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
+import React, {useRef, useState} from 'react';
 import { Header } from '../../components/commons/Header';
 import Styles from '../../styles';
 import Places from '../../components/sections/Places';
@@ -10,39 +9,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { getEvents } from '../../graphql/types/event.type';
 import { getCategoryEvents } from '../../graphql/types/categoryEvent.type';
 import Svg, { Path } from "react-native-svg";
+import { capitalize, getDay, getMonth } from '../../utils/utils';
 
-const {width: windowWidth} = Dimensions.get('window');
-
-const data = [
-  {
-    id: 'item3',
-    image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/la-lutte-senegalaise-1024x609.jpeg?alt=media&token=9a5678fe-0279-47ac-ae52-e1ddb16a42ab',
-    title: 'Combat de lutte',
-    category: 'Sport',
-    uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-  },
-  {
-    id: 'item6',
-    image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/concert2.webp?alt=media&token=257d9eea-199d-4a1e-99b7-0d6fc03264ab',
-    title: 'Concert de Mbalax',
-    category: 'Concert',
-    uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-  },
-  {
-    id: 'item1',
-    image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/bey%20concert.gif?alt=media&token=257aa2b7-ba2a-47ab-ab23-4ea22691f259',
-    title: 'Coachella 2022',
-    category: 'Concert',
-    uri: 'https://www.npmjs.com/package/react-native-anchor-carousel',
-  },
-  {
-    id: 'item2',
-    image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/giphy.gif?alt=media&token=20cb6993-3c68-4f3b-8cbb-f1a7b50d3522',
-    title: 'Concert de Rap',
-    category: 'Concert',
-    uri: 'https://github.com/lehoangnam97/react-native-anchor-carousel',
-  },
-];
+let mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-gray-900 text-sm font-medium"
+let activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-white text-sm font-medium"
 
 const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-frank-k-1808975.jpg?alt=media&token=570fec41-144b-4729-996f-69d724c84e0d"
 const image2 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-aviz-3531070.jpg?alt=media&token=2ab8f434-a7e8-4408-b863-907c0e5d7fcf"
@@ -50,38 +20,41 @@ const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.apps
 
 export default function ListEvent({ route, navigation }) {
 
+    const [text, setText] = useState("");
     const [page, setPage] = useState(1);
     const [take, setTake] = useState(10);
     const [filter, setFilter] = useState(null)
     const [direction, setDirection] = useState('asc')
     const [orderBy, setOrderBy] = useState({"id": direction})
-    const [block, setBlock] = useState(false);
 
-    const [text, onChangeText] = React.useState("");
-
-    // const { data, loading, error } = useQuery(EventsQuery, {variables: { page, take, filter,orderBy },});
+    // Fetch events
     const {eventsData, eventsLoading, eventsError} = getEvents(page, take, filter,orderBy)
-    
-    if(eventsLoading) console.log("...")
-    if(eventsData) console.log("event:query:eventsData => ", eventsData)
-    if(eventsError) console.log("event:query:eventsError => ", eventsError)
-
+    // Fetch categoryEvents
     const {categoryEventsData, categoryEventsLoading, categoryEventsError} = getCategoryEvents(null, null, null, null)
 
-    if(categoryEventsLoading) console.log("...")
-    if(categoryEventsData) console.log("categoryEvent:query:categoryEventsData => ", categoryEventsData)
-    if(categoryEventsError) console.log("categoryEvent:query:categoryEventsError => ", categoryEventsError)
+
+    function searchItem(text){
+        setText(text)
+        let newFilter = {"activated": null, "query": text, "categoryEventId": null};
+        setFilter(newFilter)
+    }
+
+    function filterByCategory(id){
+        let newFilter = null
+        newFilter = {"activated": null, "query": "", "categoryEventId": id};
+        setFilter(newFilter)
+    }
 
     function renderItem({item, index}) {
         return (
-          <Pressable onPress={() => navigation.navigate('DetailEvent', { name: 'Jane' })} activeOpacity={1} className="relative w-full h-64 rounded-2xl mb-5">
+          <Pressable onPress={() => navigation.navigate('DetailEvent', {event: item})} activeOpacity={1} className="relative w-full h-64 rounded-2xl mb-5">
     
-            <Image className="w-full h-full rounded-2xl" source={{uri: item?.image}} />
+            <Image className="w-full h-full rounded-2xl" source={{uri: item?.images[0]?.url}} />
     
             <LinearGradient className="absolute top-0 left-0 w-full h-full rounded-2xl" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} >
                 <View className="absolute bottom-5 left-6" >      
-                    <Text className="text-md text-gray-400 font-normal uppercase">{item.category}</Text>
-                    <Text className="text-xl text-white font-semibold">{item.title}</Text>
+                    <Text className="text-md text-gray-400 font-normal uppercase">{item?.categoryEvent?.name}</Text>
+                    <Text className="text-xl text-white font-semibold">{item?.name}</Text>
                 </View>
                 <View className="absolute top-2 left-3 flex flex-row p-2">
                     <View className="w-10 h-10 rounded-full bg-gray-400 bg-opacity-50 shadow-xl border-2 border-[#0e0e0e] self-center">
@@ -98,24 +71,23 @@ export default function ListEvent({ route, navigation }) {
                     </View>
                 </View>
                 <View className="bg-white/90 rounded-lg h-fit w-fit flex flex-col items-center px-[8px] py-1 absolute top-5 right-4">
-                        <Text className="text-[14.5px] font-semibold text-[#0b0b0b]">22</Text>
-                        <Text className="text-[12px] font-normal text-gray-500">Nov</Text>
+                        <Text className="text-[14.5px] font-semibold text-[#0b0b0b]">{getDay(item?.date)}</Text>
+                        <Text className="text-[12px] font-normal text-gray-500">{getMonth(item?.date)}</Text>
                 </View>
             </LinearGradient>
     
           </Pressable>
         );
-      }
+    }
 
-    
+
     function renderCategory({item, index}) {
         return (
-            <Pressable onPress={() => navigation.navigate('DetailEvent', { name: 'Jane' })} activeOpacity={1} className="w-24 min-w-fit px-2 py-1.5 mr-3 mb-0.5 bg-white shadow-sm border border-gray-200 rounded-2xl">
-                <Text className="text-center text-gray-900 text-sm font-medium">{item?.name}</Text>
+            <Pressable onPress={() => filterByCategory(item.id)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                <Text className={item.id == filter?.categoryEventId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
             </Pressable>
         );
     }
-
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -147,7 +119,7 @@ export default function ListEvent({ route, navigation }) {
                     <View className="w-[90%] h-full rounded-lg self-center">
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
-                            onChangeText={onChangeText}
+                            onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un évènement ..."
                             value={text}
                         />
@@ -157,18 +129,19 @@ export default function ListEvent({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full py-1 mb-4">
-
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 mb-0.5 bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium">Tout</Text>
-                        {/* <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Sport</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Musique</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Education</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text> */}
-
+                        <Pressable onPress={() => filterByCategory(null)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                            <Text className={filter?.categoryEventId == null ? activeCategory: mutedCategory}>Tout</Text>
+                        </Pressable>
                         <FlatList data={categoryEventsData?.categoryEvents?.categoryEvents} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
-
                     </ScrollView>
 
-                    <FlatList data={data} renderItem={renderItem} keyExtractor={item => item.id} />
+                    {eventsLoading ? (
+                        <View style={styles.loadingContainer} className="py-40">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+                        <FlatList data={eventsData?.events?.events} renderItem={renderItem} keyExtractor={item => item.id} />
+                    )}
 
                 </View>
 
