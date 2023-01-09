@@ -1,67 +1,47 @@
-import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions } from 'react-native';
+import { Pressable, Text, View, ScrollView, StyleSheet, Image, TextInput, FlatList, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
 import * as React from 'react';
 import { useState } from 'react';
 import { Header } from '../../components/commons/Header';
 import Styles from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from "react-native-svg";
+import { getMenus } from '../../graphql/types/menu.type';
+import { getCategoryMenus } from '../../graphql/types/categoryMenu.type';
+import { capitalize } from '../../utils/utils';
+
+let mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-gray-900 text-sm font-medium"
+let activeCategory = "w-full bg-[#e5724a] shadow-sm border border-gray-200 rounded-2xl px-2 py-1.5 text-center text-white text-sm font-medium"
 
 const {width: windowWidth} = Dimensions.get('window');
-
-const data = [
-    {
-        id: '1',
-        image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-shameel-mukkath-5639516.jpg?alt=media&token=01526a0c-3666-4504-88d3-82cd4acaf420',
-        title: 'Cheeseburger',
-        restaurant: 'La Corvette',
-        price: '3.500 XOF',
-    },
-    {
-        id: '2',
-        image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-ruslan-khmelevsky-4862267.jpg?alt=media&token=7fc2dcba-de8e-4be9-969e-e767273794c2',
-        title: 'Margherita',
-        restaurant: 'La Corvette',
-        price: '4.000 XOF',
-    },
-    {
-        id: '3',
-        image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-engin-akyurt-7813578.jpg?alt=media&token=1eb90458-b8c0-43a3-bea9-5ab7efe7d647',
-        title: 'Pepperoni',
-        restaurant: 'La Corvette',
-        price: '3.000 XOF',
-    },
-    {
-        id: '4',
-        image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-harry-dona-2338407.jpg?alt=media&token=a8a87796-a372-4d50-9646-348e8a8b0682',
-        title: 'Chicken Wings',
-        restaurant: 'La Corvette',
-        price: '6.500 XOF',
-    },
-    {
-        id: '5',
-        image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-polina-tankilevitch-4518638.jpg?alt=media&token=bf7a0fb6-831d-4cb9-b8fc-0ed080188394',
-        title: 'Hot Dog',
-        restaurant: 'La Corvette',
-        price: '3.000 XOF',
-    },
-    {
-        id: '6',
-        image: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-michelle-riach-995743.jpg?alt=media&token=7476d0f9-067a-491a-b213-d940e22d2b06',
-        title: 'Cheeseburger',
-        restaurant: 'La Corvette',
-        price: '4.000 XOF',
-    },
-  ];
-
 const image_height = 0.265 * windowWidth;
 
 
 export default function DetailResto({ route, navigation }) {
 
     const { restaurant } = route.params;
-    console.log("DetailResto:params:restaurants ", restaurant )
+    const [filter, setFilter] = useState({"activated": true, "query": "", "restaurantId": restaurant?.id})
+    const [text, setText] = useState("");
 
-    const [text, onChangeText] = React.useState("");
+    // Fetch services
+    const {menusData, menusLoading, menusError} = getMenus(null,null,filter,null)
+    console.log("getMenus:menusData => ", menusData )
+
+    // Fetch category menus
+    const {categoryMenusData, categoryMenusLoading, categoryMenusError} = getCategoryMenus(null, null, null, null)
+    console.log("getCategoryMenus:categoryMenusData => ", categoryMenusData )
+
+    // Search Items
+    function searchItem(text){
+        setText(text)
+        let newFilter = {"activated": true, "query": text, "restaurantId": restaurant?.id, "categoryMenuId": null}
+        setFilter(newFilter)
+    }
+
+    // Filter by category
+    function filterByCategory(id){
+        let newFilter = {"activated": true, "query": text, "restaurantId": restaurant?.id, "categoryMenuId": id}
+        setFilter(newFilter)
+    }
 
     return (
         <View style={[Styles.container, styles.fontFamily]} >
@@ -93,7 +73,7 @@ export default function DetailResto({ route, navigation }) {
                     <View className="w-[90%] h-full rounded-lg self-center">
                         <TextInput
                             className="w-full h-full px-2 text-[#7a7a7a] text-base font-medium border-none active:border-none"
-                            onChangeText={onChangeText}
+                            onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un menu ..."
                             value={text}
                         />
@@ -103,19 +83,19 @@ export default function DetailResto({ route, navigation }) {
                 <View className="w-full mt-4">
 
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full py-1 mb-4">
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-[#e5724a] shadow-sm border border-gray-200 rounded-2xl text-center text-white text-sm font-medium ">Tout</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Pizza</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900  text-sm font-medium  ">Burger</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Hotdog</Text>
-                        <Text className="w-24 min-w-fit px-2 py-1.5 mr-3 bg-white shadow-sm border border-gray-200 rounded-2xl text-center text-gray-900 text-sm font-medium  ">Culture</Text>
+                        <Pressable onPress={() => filterByCategory(null)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                            <Text className={filter?.categoryMenuId == null ? activeCategory: mutedCategory}>Tout</Text>
+                        </Pressable>
+                        <FlatList data={categoryMenusData?.categoryMenus?.categoryMenus} renderItem={renderCategory} keyExtractor={item => item.id} horizontal={true} />
                     </ScrollView>
 
-                    <FlatList
-                        data={data}
-                        numColumns={2}
-                        renderItem={renderItem}    
-                        keyExtractor={item => item.id}
-                    />
+                    {menusLoading ? (
+                        <View className="py-40">
+                            <ActivityIndicator size="large" color="#b1b1b1" />
+                        </View>
+                    ) : (
+                        <FlatList numColumns={2} data={menusData?.menus?.menus} renderItem={renderItem} keyExtractor={item => item.id} />
+                    )}
 
                 </View>
 
@@ -128,13 +108,20 @@ export default function DetailResto({ route, navigation }) {
 
     );
 
+    function renderCategory({item, index}) {
+        return (
+            <Pressable onPress={() => filterByCategory(item.id)}  activeOpacity={1} className="w-24 min-w-fit mr-3 mb-0.5">
+                <Text className={item.id == filter?.categoryMenuId ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
+            </Pressable>
+        );
+    }
 
     function renderItem({item, index}) {
         return (
-          <Pressable onPress={() => navigation.navigate('DetailProduit', { name: 'Jane' })} activeOpacity={1} className="relative flex flex-col p-1.5 bg-white/90 rounded-2xl shadow" style={{flex: 1, flexDirection: 'column',margin: 6}}>
+          <Pressable onPress={() => navigation.navigate('DetailProduit', { menu: item  })} activeOpacity={1} className="relative flex flex-col p-1.5 bg-white/90 rounded-2xl shadow" style={{flex: 1, flexDirection: 'column',margin: 6}}>
         
             <View style={{height: image_height}} className="relative w-full rounded-2xl bg-gray-300">
-                <Image className="w-full h-full object-cover rounded-2xl" source={{uri: item.image}} />
+                <Image className="w-full h-full object-cover rounded-2xl" source={{uri: item.images[0].url}} />
                 <LinearGradient className="absolute top-0 left-0 w-full h-full rounded-2xl" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.15)']} >
                     <View className="absolute top-2 right-2 w-7 h-7 flex flex-row justify-center bg-white/90 rounded-full">
                         <View className="w-4 h-4 text-[#3d3d3d] self-center">
@@ -147,9 +134,9 @@ export default function DetailResto({ route, navigation }) {
             </View>
     
             <View className="flex flex-col px-1 pb-2.5 mt-2">
-                <Text className="text-[11.5px] text-gray-600 font-light">{item.restaurant}</Text>
-                <Text className="text-base font-semibold text-gray-900">{item.title}</Text>
-                <Text className="text-[12.4px] font-medium text-[#e5724a] mt-0.5">{item.price}</Text>
+                <Text className="text-[11.5px] text-gray-600 font-light">{item.restaurant.name}</Text>
+                <Text className="text-base font-semibold text-gray-900">{item.name}</Text>
+                <Text className="text-[12.4px] font-medium text-[#e5724a] mt-0.5">{item.price} XOF</Text>
             </View>
     
     

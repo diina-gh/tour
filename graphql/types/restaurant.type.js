@@ -19,21 +19,6 @@ export const RestaurantsQuery = gql`
                     imageref
                     url
                 }
-                menus {
-                    id
-                    name
-                    desc
-                    price
-                    categoryMenu {
-                        id
-                        name
-                    }
-                    images {
-                        id
-                        imageref
-                        url
-                    }
-                }
             }
         }
     }

@@ -14,9 +14,15 @@ const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.apps
 const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-horizon-content-3738730.jpg?alt=media&token=90603d7d-4d87-479d-9cc1-10ec317613dc"
 
 
-export default function DetailProduit({navigation}) {
+export default function DetailProduit({route, navigation}) {
 
+  const { menu } = route.params;
+  const [quantity, setQuantity] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const updateConsole = (increment) => {
+    setQuantity((prevs) => Math.max(prevs + increment, 1));
+  };
 
   const getModal = () =>{
       return (
@@ -46,7 +52,7 @@ export default function DetailProduit({navigation}) {
 
             <View className="relative w-full h-96 bg-stone-100">
                 
-                <Image className="w-full h-full object-cover" source={{uri: image1}} />
+                <Image className="w-full h-full object-cover" source={{uri: menu?.images[0]?.url}} />
                 
                 <LinearGradient className="absolute top-0 left-0 w-full h-full" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.3)']} >
 
@@ -95,15 +101,15 @@ export default function DetailProduit({navigation}) {
             <View className="w-full flex flex-row justify-between px-4 mt-4">
 
                 <View className="w-7/12 flex flex-col self-center">
-                    <Text className="text-[12.5px] font-light text-gray-700">La Corvette / Burger</Text>
-                    <Text className="text-lg font-semibold text-[#0b0b0b]">Cheeseburger</Text>
-                    <Text className="text-[14px] font-medium text-[#e5724a]">3.000 XOF</Text>
+                    <Text className="text-[12.5px] font-light text-gray-700"> {menu?.restaurant?.name + ' / ' + menu?.categoryMenu?.name}</Text>
+                    <Text className="text-lg font-semibold text-[#0b0b0b]">{menu?.name}</Text>
+                    <Text className="text-[14px] font-medium text-[#e5724a]">{menu?.price} XOF</Text>
                 </View>
 
-                <View className="w-24 h-9 items-center bg-[#cccccc]/40 shadow-sm rounded-xl flex flex-row justify-between px-3 self-center">
-                    <Text className="text-lg font-semibold text-[#0b0b0b]">-</Text>
-                    <Text className="text-base font-medium text-[#0b0b0b]">1</Text>
-                    <Text className="text-lg font-semibold text-[#0b0b0b]">+</Text>
+                <View className="w-24 h-9 items-center bg-[#0b0b0b] shadow-sm rounded-xl flex flex-row justify-between px-3 self-center mt-2">
+                    <Button color="transparent" titleStyle={{ color: "#000000" }} onPress={() => updateConsole(-1)} className="text-lg font-semibold h-full" title="-" />
+                    <Text className="text-base font-medium text-gray-50">{quantity}</Text>
+                    <Button color="#transparent" titleStyle={{ color: "#000000" }} onPress={() => updateConsole(1)} className="text-lg font-semibold h-full" title="+" />
                 </View>
                
             </View>
@@ -122,12 +128,10 @@ export default function DetailProduit({navigation}) {
             <View className="px-4 mb-24">
 
                 <View className="flex flex-col mt-4">
-                    <Text className="text-base text-gray-700 font-medium">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                    </Text>
+                    <Text className="text-base text-gray-700 font-medium">{menu?.desc}</Text>
                 </View>
 
-                <View className="w-full flex flex-row mt-4">
+                {/* <View className="w-full flex flex-row mt-4">
 
                     <View className="flex flex-col items-center mr-4">
                         <View className="w-14 h-14 rounded-full bg-[#cccccc]/30 shadow"></View>
@@ -144,7 +148,7 @@ export default function DetailProduit({navigation}) {
                         <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">Lorem ipsm</Text>
                     </View>
                     
-                </View>
+                </View> */}
 
                 <View className="w-full flex flex-col mt-5 mb-4">
 
