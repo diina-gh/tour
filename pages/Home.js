@@ -111,6 +111,7 @@ export default function Home({ route, navigation }) {
                             onChangeText={value => searchPlace(value)}
                             placeholder="Rechercher un site ..."
                             value={text}
+                            style={{ outline: 'none' }}
                         />
                     </View>
                 </View>

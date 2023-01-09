@@ -76,6 +76,7 @@ export default function DetailResto({ route, navigation }) {
                             onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un menu ..."
                             value={text}
+                            style={{ outline: 'none' }}
                         />
                     </View>
                 </View>

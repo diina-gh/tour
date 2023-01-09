@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Button, Dimensions, TouchableWithoutFeedback, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Button, Dimensions, TouchableWithoutFeedback, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import Svg, { Path } from "react-native-svg";
 
-
 const {width, height } = Dimensions.get("window");
-
-const image1 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-shameel-mukkath-5639516.jpg?alt=media&token=01526a0c-3666-4504-88d3-82cd4acaf420"
-const image2 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-andra-918581.jpg?alt=media&token=c0e9c30b-929b-4c1c-9bef-7b5fdb4f5ac2"
-const image3 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-rajesh-tp-1633578.jpg?alt=media&token=4a0e23ff-e45c-48e5-9a8b-f08ae9bfa822"
-const image4 = "https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-horizon-content-3738730.jpg?alt=media&token=90603d7d-4d87-479d-9cc1-10ec317613dc"
-
+const mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
+const activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg p-0.5";
 
 export default function DetailProduit({route, navigation}) {
 
   const { menu } = route.params;
   const [quantity, setQuantity] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
+  const [chosenImage, setChosenImage] = useState(menu?.images[0]);
 
   const updateConsole = (increment) => {
     setQuantity((prevs) => Math.max(prevs + increment, 1));
@@ -40,12 +36,19 @@ export default function DetailProduit({route, navigation}) {
       );
   };
 
+  function renderGalerie({item, index}) {
+    return (
+        <Pressable onPress={() => setChosenImage(item)}  activeOpacity={1} className="mr-4 rounded-lg shadow-sm">
+            <View className={item?.url == chosenImage?.url ? activeImage : mutedImage}>
+                <Image className="w-full h-full object-cover rounded-lg" source={{uri: item?.url}} />
+            </View>
+        </Pressable>
+    );
+   }
+
 
   return (
-    // <View style={styles.container}>
-    //   <Button title="Press Me!" onPress={() => setModalVisible(true)} />
-    //   {getModal()}
-    // </View>
+
     <View style={[styles.fontFamily]} className="relative w-full h-full" >
 
         <ScrollView className="w-full h-[0px] bg-[#fef9f6]" horizontal={false} showsVerticalScrollIndicator={false}>
@@ -74,24 +77,10 @@ export default function DetailProduit({route, navigation}) {
                         </View>
                     </View>
 
-                    <View className="absolute bottom-5 left-0 w-full flex flex-row justify-center" >
-
-                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg shadow-sm p-0.5 mr-4">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image2}} />
-                        </View>
-
-                        <View className="w-16 h-16 self-center bg-gray-800/30 border-2 border-white rounded-lg shadow-sm p-0.5 mr-4">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image1}} />
-                        </View>
-
-                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm mr-4">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image3}} />
-                        </View>
-
-                        <View className="w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5 shadow-sm">
-                            <Image className="w-full h-full object-cover rounded-lg" source={{uri: image4}} />
-                        </View>
-
+                    <View className="absolute bottom-5 left-0 w-full flex flex-row px-6">
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full flex flex-row" >
+                            <FlatList data={menu?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
+                        </ScrollView>
                     </View>
 
                 </LinearGradient>

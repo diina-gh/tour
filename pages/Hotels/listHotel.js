@@ -94,6 +94,7 @@ export default function ListHotel({ route, navigation }) {
                             onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un hôtel ..."
                             value={text}
+                            style={{ outline: 'none' }}
                         />
                     </View>
                 </View>

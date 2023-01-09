@@ -122,6 +122,7 @@ export default function ListEvent({ route, navigation }) {
                             onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un évènement ..."
                             value={text}
+                            style={{ outline: 'none' }}
                         />
                     </View>
                 </View>

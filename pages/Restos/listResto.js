@@ -64,6 +64,7 @@ export default function ListResto({ route, navigation }) {
                             onChangeText={value => searchItem(value)}
                             placeholder="Rechercher un restaurant ..."
                             value={text}
+                            style={{ outline: 'none' }}
                         />
                     </View>
                 </View>
