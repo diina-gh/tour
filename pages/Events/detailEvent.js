@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, FlatList, Image, TouchableOpacity, ActivityIndicator, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import { getDay, getMonth } from '../../utils/utils';
 import Svg, { Path } from "react-native-svg";
-
+import { SaveEventReservation } from '../../graphql/types/eventReservation';
+import Toast from 'react-native-toast-message';
+import { useMutation } from '@apollo/client';
 
 const {width, height } = Dimensions.get("window");
 let mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
@@ -14,23 +16,88 @@ let activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white ro
 export default function DetailEvent({route, navigation}) {
 
   const { event } = route.params;
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const [chosenImage, setChosenImage] = useState(event?.images[0]);
+  const [nbPersons, setNbPersons] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [saveEventReservation, { loading: mutationLoading, error: mutationError }] = useMutation(SaveEventReservation);
+
+  async function onBook() {
+    if(mutationLoading) return null;
+    try {
+      const result = await saveEventReservation({
+        variables: {
+          id: null,
+          eventId: event.id,
+          userId: user.id,
+          nbPersons: parseInt(nbPersons) 
+        }
+      });
+      if (result.data) {
+        if (result.data.saveEventReservation.__typename === 'InputError') {
+          // An input error occurred, display an error message to the user
+          Toast.show({type: 'error',text1: 'Error', text2: result.data.saveEventReservation.message, visibilityTime: 2500,});
+        } else if (result.data.saveEventReservation.__typename === 'EventReservation') {
+          // Mutation was successful, show a success message and navigate the user back to the list of hotels
+          Toast.show({type: 'success', text1: 'Réservation', text2: 'Reservation saved!', visibilityTime: 2500,});
+          navigation.dispatch(CommonActions.goBack({key: "ListEvent",})
+          );
+        }
+      }
+    } catch (e) {
+      // An error occurred, display an error message to the user
+      console.error(e);
+      alert(e.message);
+    }
+  }
+
+  const updateNbPersons = (increment) => {
+    setNbPersons((prevNbPersons) => {
+      const newNbPersons = prevNbPersons + increment;
+      return Math.max(newNbPersons, 1);
+    });
+  };
+
+
   const getModal = () =>{
-      return (
-        <Modal
-          entry="bottom"
-          backdropPressToClose={true}
-          isOpen={modalVisible}
-          style={styles.modalBox}
-          onClosed={() => setModalVisible(false)}
-        >
-          <View style={styles.content}>
-            <Text style={styles.textStyle}>AndroidVille</Text>
-          </View>
-        </Modal>
-      );
+    return (
+      <Modal entry="bottom" backdropPressToClose={true} isOpen={modalVisible} style={styles.modalBox} onClosed={() => setModalVisible(false)}>
+        <View style={styles.content} className="relative w-full h-full pb-16">
+
+          {mutationLoading && (
+              <View className="absolute top-0 left-0 w-full h-full bg-gray-300/50 rounded-t-[25] z-40 items-center justify-center">
+                  <ActivityIndicator size="large" color="#9d9d9d" />
+              </View>        
+          )}
+
+          <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-6 py-8">
+
+              <Text className="text-2xl font-bold text-[#0b0b0b]">Réservation</Text>
+              <Text className="text-base font-medium text-gray-700 mt-2">Ne tardez pas à réserver votre place pour l'évènement de l'année."</Text>
+              
+
+              <View className="mt-6">
+                  <Text className="text-[16.5px] font-semibold text-gray-800 mb-2">Nombre de personnes</Text>
+                  <View className="w-min flex flex-row justify-start">
+                    <View className="w-24 h-9 items-center bg-[#0b0b0b] shadow-sm rounded-xl flex flex-row justify-between px-3 self-center mt-2">
+                        <Button color="transparent" titleStyle={{ color: "#000000" }} onPress={() => updateNbPersons(-1)} className="text-lg font-semibold h-full" title="-" />
+                        <Text className="text-base font-medium text-gray-50">{nbPersons}</Text>
+                        <Button color="#transparent" titleStyle={{ color: "#000000" }} onPress={() => updateNbPersons(1)} className="text-lg font-semibold h-full" title="+" />
+                    </View>
+                  </View>
+              </View>
+
+              <View className="mt-6 flex flex-row justify-end text-[16px]">
+                <Text className="font-semibold mr-2">Total :</Text>
+                <Text className="font-medium text-gray-600">{(event?.ticketPrice * nbPersons).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} XOF</Text>
+              </View>
+
+          </ScrollView>
+        </View>
+      </Modal>
+    );
   };
 
   function renderGalerie({item, index}) {
@@ -137,9 +204,16 @@ export default function DetailEvent({route, navigation}) {
         </ScrollView>
 
         <View className="w-full h-[80px] bg-[#fefaf9] shadow rounded-t-2xl absolute bottom-0 left-0 z-10 px-6 py-3">
-            <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
-                <Text className="text-xl text-white font-semibold self-center">Participer</Text>
-            </TouchableOpacity>
+            {!modalVisible ?
+                <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                    <Text className="text-xl text-white font-semibold self-center">Participer</Text>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity onPress={onBook} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                    <Text className="text-xl text-white font-semibold self-center">Valider</Text>
+                </TouchableOpacity>
+            }
+
         </View>
 
         {getModal()}
