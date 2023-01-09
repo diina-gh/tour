@@ -75,7 +75,7 @@ export default function DetailEvent({route, navigation}) {
           <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-6 py-8">
 
               <Text className="text-2xl font-bold text-[#0b0b0b]">Réservation</Text>
-              <Text className="text-base font-medium text-gray-700 mt-2">Ne tardez pas à réserver votre place pour l'évènement de l'année."</Text>
+              <Text className="text-base font-medium text-gray-700 mt-2">Ne tardez pas à réserver votre place pour l'évènement de l'année.</Text>
               
 
               <View className="mt-6">

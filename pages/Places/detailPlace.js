@@ -5,12 +5,11 @@ import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import Svg, { Path } from "react-native-svg";
 import CalendarPicker from 'react-native-calendar-picker';
-import { getHotelRoomTypes } from '../../graphql/types/hotelRoomType.type';
 import { capitalize } from '../../utils/utils';
 import { useMutation } from '@apollo/client';
-import { SaveHotelReservation } from '../../graphql/types/hotelReservation.type';
+import { SavePlaceReservation } from '../../graphql/types/placeReservation.type';
 import Toast from 'react-native-toast-message';
-
+import { getServices } from '../../graphql/types/service.type';
 
 const {width, height } = Dimensions.get("window");
 const mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
@@ -18,53 +17,55 @@ const activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white 
 const mutedCategory = "w-full bg-white shadow-sm border border-gray-200 rounded-2xl px-2.5 py-1.5 text-center text-gray-900 text-sm font-medium"
 const activeCategory = "w-full bg-[#0e0e0e] shadow-sm border border-gray-200 rounded-2xl px-2.5 py-1.5 text-center text-white text-sm font-medium"
 
-export default function DetailHotel({route, navigation}) {
+export default function DetailPlace({route, navigation}) {
 
-  const { hotel } = route.params;
+  const { place } = route.params;
+  console.log("Actual place => ", place)
   const user = JSON.parse(localStorage.getItem('user'));
 
-  const [chosenImage, setChosenImage] = useState(hotel?.images[0]);
+  // Fetch services
+  const serviceFilter = {"activated": true, "query": "", "placeId": place?.id}
+  const {servicesData, servicesLoading, servicesError} = getServices(null,null,serviceFilter,null)
+  console.log("getServices:servicesData => ", servicesData )
+
+  const [chosenImage, setChosenImage] = useState(place?.images[0]);
   const [modalVisible, setModalVisible] = useState(false);
 
   //Booking variables
   const minDate = new Date(); // Today
   const [nbPersons, setNbPersons] = useState(1);
-  const [hotelRoomTypeId, setHotelRoomTypeId] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
-  // Fetch hotelRoomTypes
-  const {hotelRoomTypesData, hotelRoomTypesLoading, hotelRoomTypesError} = getHotelRoomTypes(null,null,null,null)
+  const [services, setServices] = useState([]);
+  const [date, setDate] = useState(null);
+  const [total, setTotal] = useState(place.ticketPrice);
 
   function changeDate(date, type) {
-    if (type === 'START_DATE') setStartDate(date.format('YYYY-MM-DD'))
-    if (type === 'END_DATE') setEndDate(date.format('YYYY-MM-DD'))
+    setDate(date.format('YYYY-MM-DD'))
+    calculateTotal()
   }
 
-  const [saveHotelReservation, { loading: mutationLoading, error: mutationError }] = useMutation(SaveHotelReservation);
+  const [savePlaceReservation, { loading: mutationLoading, error: mutationError }] = useMutation(SavePlaceReservation);
 
   async function onBook() {
     if(mutationLoading) return null;
     try {
-      const result = await saveHotelReservation({
+      const result = await savePlaceReservation({
         variables: {
           id: null,
-          hotelId: hotel.id,
+          placeId: place.id,
           userId: user.id,
-          hotelRoomTypeId: hotelRoomTypeId,
-          startDate: startDate,
-          endDate: endDate,
-          nbPersons: parseInt(nbPersons) 
+          date: date,
+          nbPersons: parseInt(nbPersons),
+          services: services
         }
       });
       if (result.data) {
-        if (result.data.saveHotelReservation.__typename === 'InputError') {
+        if (result.data.savePlaceReservation.__typename === 'InputError') {
           // An input error occurred, display an error message to the user
-          Toast.show({type: 'error',text1: 'Error', text2: result.data.saveHotelReservation.message, visibilityTime: 2500,});
-        } else if (result.data.saveHotelReservation.__typename === 'HotelReservation') {
-          // Mutation was successful, show a success message and navigate the user back to the list of hotels
+          Toast.show({type: 'error',text1: 'Error', text2: result.data.savePlaceReservation.message, visibilityTime: 2500,});
+        } else if (result.data.savePlaceReservation.__typename === 'PlaceReservation') {
+          // Mutation was successful, show a success message and navigate the user back to the list of places
           Toast.show({type: 'success', text1: 'Réservation', text2: 'Reservation saved!', visibilityTime: 2500,});
-          navigation.dispatch(CommonActions.goBack({key: "ListHotel",})
+          navigation.dispatch(CommonActions.goBack({key: "ListPlace",})
           );
         }
       }
@@ -80,12 +81,27 @@ export default function DetailHotel({route, navigation}) {
       const newNbPersons = prevNbPersons + increment;
       return Math.max(newNbPersons, 1);
     });
+    calculateTotal()
   };
 
-  function renderRoomType({item, index}) {
+  function toggleService(serviceId) {
+    if (services.includes(serviceId)) {
+      setServices(services.filter(id => id !== serviceId));
+    } else {
+      setServices([...services, serviceId]);
+    }
+  }
+
+  function calculateTotal() {
+    const selectedServices = servicesData.services.services.filter(service => services.includes(service.id));
+    const totalAmount = selectedServices.reduce((acc, service) => acc + service.price, 0);
+    setTotal((totalAmount + place.ticketPrice) * nbPersons)
+  }
+
+  function renderService({item, index}) {
     return (
-        <Pressable onPress={() => setHotelRoomTypeId(item.id)}  activeOpacity={1} className="min-w-fit mr-3 mb-0.5">
-            <Text className={item.id == hotelRoomTypeId  ? activeCategory: mutedCategory}>{capitalize(item?.roomType?.name)}</Text>
+        <Pressable onPress={() => toggleService(item.id)}  activeOpacity={1} className="min-w-fit mr-3 mb-0.5">
+            <Text className={services.includes(item.id) ? activeCategory: mutedCategory}>{capitalize(item?.name)}</Text>
         </Pressable>
     );
   }
@@ -104,13 +120,11 @@ export default function DetailHotel({route, navigation}) {
             <ScrollView showsVerticalScrollIndicator={false} className="w-full h-full px-6 py-8">
 
                 <Text className="text-2xl font-bold text-[#0b0b0b]">Réservation</Text>
-                <Text className="text-base font-medium text-gray-700 mt-2">Réservez votre chambre d'hôtel en toute simplicité.</Text>
+                <Text className="text-base font-medium text-gray-700 mt-2">Optez pour la simplicité de la réservation en ligne.</Text>
                 
                 <View className="mt-6 z-20">
-                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-3">Type de chambre</Text>
-                    <FlatList data={hotelRoomTypesData?.hotelRoomTypes?.hotelRoomTypes} renderItem={renderRoomType} scrollEnabled={true} showsHorizontalScrollIndicator={false} keyExtractor={item => item.id} horizontal={true} />
-
-                    {/* <DropDownPicker className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-base font-medium text-gray-800 px-4 z-20" placeholder='Choisir un type de chambre' placeholderStyle={{ fontWeight: "500", fontSize: '15px'}} open={open} value={hotelRoomTypeId} items={items} setOpen={setOpen} setValue={setHotelRoomTypeId} /> */}
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-3.5">Choisir des services</Text>
+                    <FlatList data={servicesData?.services?.services} renderItem={renderService} scrollEnabled={true} showsHorizontalScrollIndicator={false} keyExtractor={item => item.id} horizontal={true} />
                 </View>
 
                 <View className="mt-6">
@@ -125,12 +139,12 @@ export default function DetailHotel({route, navigation}) {
                 </View>
 
                 <View className="relative mt-6 w-full">
-                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-2.5">Période de votre séjour</Text>
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-2.5">Choisir une date</Text>
                     <CalendarPicker
                         minDate={minDate}
                         width={345}
                         startFromMonday={true}
-                        allowRangeSelection={true}
+                        allowRangeSelection={false}
                         todayBackgroundColor="#aeaeae"
                         selectedDayColor="#333333"
                         selectedDayTextColor="#FFFFFF"
@@ -140,6 +154,11 @@ export default function DetailHotel({route, navigation}) {
                         previousTitle="←"
                         nextTitle="→"
                     />
+                </View>
+
+                <View className="mt-6 flex flex-row justify-end text-[16px]">
+                    <Text className="font-semibold mr-2">Total :</Text>
+                    <Text className="font-medium text-gray-600">{(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} XOF</Text>
                 </View>
 
             </ScrollView>
@@ -188,7 +207,7 @@ export default function DetailHotel({route, navigation}) {
 
                     <View className="absolute bottom-5 left-0 w-full flex flex-row px-6">
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full flex flex-row" >
-                            <FlatList data={hotel?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
+                            <FlatList data={place?.images} renderItem={renderGalerie} keyExtractor={item => item.id} horizontal={true} />
                         </ScrollView>
                     </View>
 
@@ -204,9 +223,9 @@ export default function DetailHotel({route, navigation}) {
                             <Path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></Path>
                         </Svg>
                     </View>
-                    <Text className="text-gray-400 text-[14px] font-medium self-center">{hotel?.address}</Text>
+                    <Text className="text-gray-400 text-[14px] font-medium self-center">{place?.address}</Text>
                 </View>
-                <Text className="text-xl text-[#0b0b0b] font-semibold">{hotel?.name}</Text>
+                <Text className="text-xl text-[#0b0b0b] font-semibold">{place?.name}</Text>
             </View>
 
             <View className="w-full flex flex-row px-4 mt-4">
@@ -224,11 +243,11 @@ export default function DetailHotel({route, navigation}) {
 
                 <View className="flex flex-col mt-4">
                     <Text className="text-base text-gray-700 font-medium">
-                        {hotel?.desc}
+                        {place?.desc}
                     </Text>
                 </View>
 
-                <View className="w-full flex flex-row mt-4">
+                {/* <View className="w-full flex flex-row mt-4">
 
                     <View className="flex flex-col items-center mr-4">
                         <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
@@ -245,7 +264,7 @@ export default function DetailHotel({route, navigation}) {
                         <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">Lorem ipsm</Text>
                     </View>
                     
-                </View>
+                </View> */}
 
                 <View className="w-full flex flex-col mt-5 mb-4">
 

@@ -6,6 +6,7 @@ import {
   View,
   Dimensions,
   Image,
+  Pressable,
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
 import DotPagination from '../commons/DotPagination';
@@ -28,28 +29,28 @@ export default function Places(props) {
   function renderItem({item, index}) {
 
     return (
-      <TouchableOpacity activeOpacity={1} style={styles.item} onPress={() => {carouselRef.current.scrollToIndex(index);}}>
+          <TouchableOpacity onPress={() => props.navigation.navigate('DetailPlace', {place: item})} activeOpacity={1} style={styles.item} >
 
-        <Image  style={styles.itemImage} source={{uri: item?.images[0]?.url}} />
-        
-        <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} style={styles.placeView}>
+            <Image  style={styles.itemImage} source={{uri: item?.images[0]?.url}} />
 
-          <View>
-            <Text style={styles.placeHeader}>{item?.name}</Text>
-            <Text style={styles.placeDesc}>
-              {truncate(item?.desc, 95)}
-            </Text>
-            <View style={styles.poster} >
-              <View style={styles.posterImgContainer}>
-               <Image style={styles.posterImg} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-andrea-piacquadio-3765151.jpg?alt=media&token=b6daa01c-219c-453e-9201-ea3c6b3d9ecd'}} />
+            <LinearGradient colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.6)']} style={styles.placeView}>
+
+              <View>
+                <Text style={styles.placeHeader}>{item?.name}</Text>
+                <Text style={styles.placeDesc}>
+                  {truncate(item?.desc, 95)}
+                </Text>
+                <View style={styles.poster} >
+                  <View style={styles.posterImgContainer}>
+                  <Image style={styles.posterImg} source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tour-base-887ca.appspot.com/o/pexels-andrea-piacquadio-3765151.jpg?alt=media&token=b6daa01c-219c-453e-9201-ea3c6b3d9ecd'}} />
+                  </View>
+                  <Text style={styles.posterName}>Ndoumbe Sarr</Text>
+                </View>
               </View>
-              <Text style={styles.posterName}>Ndoumbe Sarr</Text>
-            </View>
-          </View>
 
-      </LinearGradient>
+            </LinearGradient>
 
-      </TouchableOpacity>
+          </TouchableOpacity>
     );
   }
 
@@ -66,7 +67,7 @@ export default function Places(props) {
         onScrollEnd={handleCarouselScrollEnd}
         ref={carouselRef}
       />
-      <DotPagination currentIndex={currentIndex} length={props.places?.length} color='#e4ded8' />
+      {/* <DotPagination currentIndex={currentIndex} length={props.places?.length} color='#e4ded8' /> */}
     </View>
   );
 }

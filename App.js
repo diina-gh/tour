@@ -11,6 +11,7 @@ import DetailResto from './pages/Restos/detailResto';
 import DetailProduit from './pages/Restos/detailProduit';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import DetailPlace from './pages/Places/detailPlace';
 
 const cache = new InMemoryCache()
 
@@ -35,6 +36,7 @@ export default function App() {
             <Stack.Navigator>
               <Stack.Screen name="Root" component={TabNavigation} options={{ headerShown: false }} />
               <Stack.Screen name="DetailEvent" component={DetailEvent} options={{ headerShown: false }} />
+              <Stack.Screen name="DetailPlace" component={DetailPlace} options={{ headerShown: false }} />
               <Stack.Screen name="DetailHotel" component={DetailHotel} options={{ headerShown: false }} />
               <Stack.Screen name="DetailResto" component={DetailResto} options={{ headerShown: false }} />
               <Stack.Screen name="DetailProduit" component={DetailProduit} options={{ headerShown: false }} />
