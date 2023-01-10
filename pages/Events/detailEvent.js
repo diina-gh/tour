@@ -94,8 +94,6 @@ export default function DetailEvent({route, navigation}) {
     
   });
 
-
-
   const getModal = () =>{
     return (
       <Modal entry="bottom" backdropPressToClose={true} isOpen={modalVisible} style={styles.modalBox} onClosed={() => setModalVisible(false)}>
@@ -205,21 +203,21 @@ export default function DetailEvent({route, navigation}) {
                     </Text>
                 </View>
 
-                <View className="w-full flex flex-row mt-4">
+                <View className="w-full flex flex-row mt-5">
 
-                    <View className="flex flex-col items-center mr-4">
-                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
-                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">{event?.startHours}</Text>
+                    <View className="flex flex-row text-sm bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5 mr-4">
+                        <Text className="text-gray-900 font-semibold">Début : </Text>
+                        <Text className=" text-gray-700 font-medium">{event?.startHours}</Text>
                     </View>
 
-                    <View className="flex flex-col items-center mr-4">
-                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
-                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">{event?.endHours}</Text>
+                    <View className="flex flex-row text-sm bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5 mr-4">
+                        <Text className="text-gray-900 font-semibold">Fin : </Text>
+                        <Text className=" text-gray-700 font-medium">{event?.endHours}</Text>
                     </View>
 
-                    <View className="flex flex-col items-center mr-4">
-                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
-                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">{event?.ticketPrice} XOF</Text>
+                    <View className="flex flex-row text-sm bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5">
+                        <Text className="text-gray-900 font-semibold">Tarif : </Text>
+                        <Text className=" text-gray-700 font-medium">{event?.ticketPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} XOF</Text>
                     </View>
                     
                 </View>
