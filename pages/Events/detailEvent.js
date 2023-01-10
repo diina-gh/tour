@@ -203,26 +203,26 @@ export default function DetailEvent({route, navigation}) {
                     </Text>
                 </View>
 
-                <View className="w-full flex flex-row mt-5">
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="w-full flex flex-row mt-5 py-1">
 
-                    <View className="flex flex-row text-sm bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5 mr-4">
+                    <View className="flex flex-row text-xs bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5 mr-3">
                         <Text className="text-gray-900 font-semibold">Début : </Text>
                         <Text className=" text-gray-700 font-medium">{event?.startHours}</Text>
                     </View>
 
-                    <View className="flex flex-row text-sm bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5 mr-4">
+                    <View className="flex flex-row text-xs bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5 mr-3">
                         <Text className="text-gray-900 font-semibold">Fin : </Text>
                         <Text className=" text-gray-700 font-medium">{event?.endHours}</Text>
                     </View>
 
-                    <View className="flex flex-row text-sm bg-slate-200/30 rounded-xl shadow-sm px-2.5 py-1.5">
-                        <Text className="text-gray-900 font-semibold">Tarif : </Text>
-                        <Text className=" text-gray-700 font-medium">{event?.ticketPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} XOF</Text>
+                    <View className="flex flex-row text-xs bg-gray-900 rounded-xl shadow-sm px-2.5 py-1.5">
+                        <Text className="text-white font-semibold">Tarif : </Text>
+                        <Text className=" text-gray-100 font-medium">{event?.ticketPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} XOF</Text>
                     </View>
                     
-                </View>
+                </ScrollView>
 
-                <View className="w-full flex flex-col mt-5 mb-4">
+                <View className="w-full flex flex-col mt-6 mb-6">
 
                     <View></View>
 

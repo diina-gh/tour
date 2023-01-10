@@ -142,6 +142,14 @@ export default function DetailPlace({route, navigation}) {
     );
   }
 
+  function renderPassiveService({item, index}) {
+    return (
+        <Pressable activeOpacity={1} className="min-w-fit mr-3 mb-0.5">
+            <Text className={mutedCategory}>{capitalize(item?.name)}</Text>
+        </Pressable>
+    );
+  }
+
   const getModal = () =>{
       return (
         <Modal entry="bottom" backdropPressToClose={true} isOpen={modalVisible} style={styles.modalBox} onClosed={() => setModalVisible(false)}>
@@ -302,7 +310,12 @@ export default function DetailPlace({route, navigation}) {
                     
                 </View> */}
 
-                <View className="w-full flex flex-col mt-5 mb-4">
+                <View className="mt-6">
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-3.5">Nos services</Text>
+                    <FlatList data={servicesData?.services?.services} renderItem={renderPassiveService} scrollEnabled={true} showsHorizontalScrollIndicator={false} keyExtractor={item => item.id} horizontal={true} />
+                </View>
+
+                <View className="w-full flex flex-col mt-6 mb-4">
                     <View></View>
                     <View ref={mapContainer} className="w-full h-52 bg-slate-300 rounded-xl"></View>
                 </View>
