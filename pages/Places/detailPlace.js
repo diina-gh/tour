@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList, TextInput, ActivityIndicator, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
@@ -10,6 +10,10 @@ import { useMutation } from '@apollo/client';
 import { SavePlaceReservation } from '../../graphql/types/placeReservation.type';
 import Toast from 'react-native-toast-message';
 import { getServices } from '../../graphql/types/service.type';
+
+import mapboxgl from '!mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css';
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGluYTMyNzUiLCJhIjoiY2xjaHY4dDZ6MDRiNTNwcDZjZnA3dzI2eiJ9.n04NQEJUCUS2svQvRKDx3g';
 
 const {width, height } = Dimensions.get("window");
 const mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
@@ -97,6 +101,38 @@ export default function DetailPlace({route, navigation}) {
     const totalAmount = selectedServices.reduce((acc, service) => acc + service.price, 0);
     setTotal((totalAmount + place.ticketPrice) * nbPersons)
   }
+
+
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [lng, setLng] = useState(parseFloat(place.longitude));
+  const [lat, setLat] = useState(parseFloat(place.latitude));
+  const [zoom, setZoom] = useState(12);
+
+  useEffect(() => {
+
+      if (map.current) return; // initialize map only once
+
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [lng, lat],
+        zoom: zoom,
+        marker: [lng, lat],
+      });
+
+      map.current.on('move', () => {
+          setLng(map.current.getCenter().lng.toFixed(4));
+          setLat(map.current.getCenter().lat.toFixed(4));
+          setZoom(map.current.getZoom().toFixed(2));
+      });
+
+      const marker = new mapboxgl.Marker({color: '#222222'})
+      .setLngLat([lng, lat])
+      .addTo(map.current);
+    
+  });
+
 
   function renderService({item, index}) {
     return (
@@ -267,11 +303,8 @@ export default function DetailPlace({route, navigation}) {
                 </View> */}
 
                 <View className="w-full flex flex-col mt-5 mb-4">
-
                     <View></View>
-
-                    <View className="w-full h-52 bg-slate-300 rounded-xl"></View>
-                    
+                    <View ref={mapContainer} className="w-full h-52 bg-slate-300 rounded-xl"></View>
                 </View>
 
             </View>

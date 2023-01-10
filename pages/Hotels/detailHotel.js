@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, Dimensions, ScrollView, Image, TouchableOpacity, FlatList, TextInput, ActivityIndicator, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
@@ -11,6 +11,9 @@ import { useMutation } from '@apollo/client';
 import { SaveHotelReservation } from '../../graphql/types/hotelReservation.type';
 import Toast from 'react-native-toast-message';
 
+import mapboxgl from '!mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css';
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGluYTMyNzUiLCJhIjoiY2xjaHY4dDZ6MDRiNTNwcDZjZnA3dzI2eiJ9.n04NQEJUCUS2svQvRKDx3g';
 
 const {width, height } = Dimensions.get("window");
 const mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
@@ -82,10 +85,49 @@ export default function DetailHotel({route, navigation}) {
     });
   };
 
+    const mapContainer = useRef(null);
+    const map = useRef(null);
+    const [lng, setLng] = useState(parseFloat(hotel.longitude));
+    const [lat, setLat] = useState(parseFloat(hotel.latitude));
+    const [zoom, setZoom] = useState(12);
+
+    useEffect(() => {
+
+        if (map.current) return; // initialize map only once
+
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [lng, lat],
+          zoom: zoom,
+          marker: [lng, lat],
+        });
+
+        map.current.on('move', () => {
+            setLng(map.current.getCenter().lng.toFixed(4));
+            setLat(map.current.getCenter().lat.toFixed(4));
+            setZoom(map.current.getZoom().toFixed(2));
+        });
+
+        const marker = new mapboxgl.Marker({color: '#222222'})
+        .setLngLat([lng, lat])
+        .addTo(map.current);
+      
+    });
+  
+
   function renderRoomType({item, index}) {
     return (
         <Pressable onPress={() => setHotelRoomTypeId(item.id)}  activeOpacity={1} className="min-w-fit mr-3 mb-0.5">
             <Text className={item.id == hotelRoomTypeId  ? activeCategory: mutedCategory}>{capitalize(item?.roomType?.name)}</Text>
+        </Pressable>
+    );
+  }
+
+  function renderPassiveRoomType({item, index}) {
+    return (
+        <Pressable activeOpacity={1} className="min-w-fit mr-3 mb-0.5">
+            <Text className={mutedCategory}>{capitalize(item?.roomType?.name)}</Text>
         </Pressable>
     );
   }
@@ -109,8 +151,6 @@ export default function DetailHotel({route, navigation}) {
                 <View className="mt-6 z-20">
                     <Text className="text-[16.5px] font-semibold text-gray-800 mb-3">Type de chambre</Text>
                     <FlatList data={hotelRoomTypesData?.hotelRoomTypes?.hotelRoomTypes} renderItem={renderRoomType} scrollEnabled={true} showsHorizontalScrollIndicator={false} keyExtractor={item => item.id} horizontal={true} />
-
-                    {/* <DropDownPicker className="w-full h-12 bg-gray-100 shadow-inner rounded-2xl text-base font-medium text-gray-800 px-4 z-20" placeholder='Choisir un type de chambre' placeholderStyle={{ fontWeight: "500", fontSize: '15px'}} open={open} value={hotelRoomTypeId} items={items} setOpen={setOpen} setValue={setHotelRoomTypeId} /> */}
                 </View>
 
                 <View className="mt-6">
@@ -228,30 +268,16 @@ export default function DetailHotel({route, navigation}) {
                     </Text>
                 </View>
 
-                <View className="w-full flex flex-row mt-4">
-
-                    <View className="flex flex-col items-center mr-4">
-                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
-                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">08:30 PM</Text>
-                    </View>
-
-                    <View className="flex flex-col items-center mr-4">
-                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
-                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">5000 XOF</Text>
-                    </View>
-
-                    <View className="flex flex-col items-center mr-4">
-                        <View className="w-14 h-14 rounded-full bg-[#e16728]/25 shadow"></View>
-                        <Text className="w-20 text-gray-700 text-center text-xs font-medium mt-1">Lorem ipsm</Text>
-                    </View>
-                    
+                <View className="w-full mt-5">
+                    <Text className="text-[16.5px] font-semibold text-gray-800 mb-3">Types de chambres</Text>
+                    <FlatList data={hotelRoomTypesData?.hotelRoomTypes?.hotelRoomTypes} renderItem={renderPassiveRoomType} scrollEnabled={true} showsHorizontalScrollIndicator={false} keyExtractor={item => item.id} horizontal={true} />
                 </View>
 
                 <View className="w-full flex flex-col mt-5 mb-4">
 
                     <View></View>
 
-                    <View className="w-full h-52 bg-slate-300 rounded-xl"></View>
+                    <View ref={mapContainer} className="w-full h-52 bg-slate-300 rounded-xl"></View>
                     
                 </View>
 
