@@ -6,7 +6,7 @@ import { Colors } from '../../utils/colors';
 import Home from '../../pages/Home';
 import Favoris from '../../pages/Favoris';
 import Maps from '../../pages/Maps';
-import Profil from '../../pages/Profil';
+import Profil from '../../pages/Profil/Profil';
 import ListHotel from '../../pages/Hotels/listHotel';
 import ListEvent from '../../pages/Events/listEvent';
 import ListResto from '../../pages/Restos/listResto';

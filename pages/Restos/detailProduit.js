@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, Button, Dimensions, TouchableWithoutFeedback, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CommonActions } from '@react-navigation/native';
 import Modal from "react-native-modalbox";
 import Svg, { Path } from "react-native-svg";
+import Toast from 'react-native-toast-message';
 
 const {width, height } = Dimensions.get("window");
 const mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";
@@ -11,41 +12,82 @@ const activeImage = "w-16 h-16 self-center bg-gray-800/30 border-2 border-white 
 
 export default function DetailProduit({route, navigation}) {
 
-  const { menu } = route.params;
-  const [quantity, setQuantity] = useState(1);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [chosenImage, setChosenImage] = useState(menu?.images[0]);
+    const { menu } = route.params;
+    const [menuSaved,setMenuSaved]= useState(false);
+    const [chosenImage, setChosenImage] = useState(menu?.images[0]);
+    const [quantity, setQuantity] = useState(() => {
+        let basket = JSON.parse(localStorage.getItem("basket")) || [];
+        let menuIndex = basket.findIndex((basketItem) => basketItem.id === menu.id);
+        return (menuIndex !== -1) ? basket[menuIndex].quantity : 1;
+    });
 
-  const updateConsole = (increment) => {
-    setQuantity((prevs) => Math.max(prevs + increment, 1));
-  };
+    const updateConsole = (increment) => {
+        setQuantity((prevs) => Math.max(prevs + increment, 1));
+        saveToBasket(menu, quantity)
+        checkInBasket(menu.id)
+    };
 
-  const getModal = () =>{
-      return (
-        <Modal
-          entry="bottom"
-          backdropPressToClose={true}
-          isOpen={modalVisible}
-          style={styles.modalBox}
-          onClosed={() => setModalVisible(false)}
-        >
-          <View style={styles.content}>
-            <Text style={styles.textStyle}>AndroidVille</Text>
-          </View>
-        </Modal>
-      );
-  };
+    function saveToBasket(menu, quantity) {
+        // Get the current basket from local storage
+        let basket = JSON.parse(localStorage.getItem("basket")) || [];
 
-  function renderGalerie({item, index}) {
-    return (
-        <Pressable onPress={() => setChosenImage(item)}  activeOpacity={1} className="mr-4 rounded-lg shadow-sm">
-            <View className={item?.url == chosenImage?.url ? activeImage : mutedImage}>
-                <Image className="w-full h-full object-cover rounded-lg" source={{uri: item?.url}} />
-            </View>
-        </Pressable>
-    );
-   }
+        // check if menu already exist in the basket 
+        let menuIndex = basket.findIndex((basketItem) => basketItem.id === menu.id);
+        if (menuIndex === -1) {
+            // Add the menu to the basket with the quantity passed
+            basket.push({ ...menu, quantity });
+        } else {
+            // If the menu is already in the basket, update the quantity 
+            basket[menuIndex].quantity = quantity;
+        }
+        // Update the basket in local storage
+        localStorage.setItem("basket", JSON.stringify(basket));
 
+    };
+
+    function removeFromBasket(menuId) {
+        // Get the current basket from local storage
+        let basket = JSON.parse(localStorage.getItem("basket")) || [];
+        // Find the menu in the basket
+        let menuIndex = basket.findIndex((basketItem) => basketItem.id === menuId);
+        if (menuIndex !== -1) {
+            // Remove the menu from the basket
+            basket.splice(menuIndex, 1);
+            Toast.show({type: 'success',text1: 'Panier', text2: "L'article a été supprimé avec succès de votre panier.", visibilityTime: 2500,});
+            setMenuSaved(false)
+            setQuantity(1)
+        }
+        // Update the basket in local storage
+        localStorage.setItem("basket", JSON.stringify(basket));
+    };
+
+    function checkInBasket(menuId) {
+        // Get the current basket from local storage
+        let basket = JSON.parse(localStorage.getItem("basket")) || [];
+        // Check if the menu is in the basket
+        let menuIndex = basket.findIndex((basketItem) => basketItem.id === menuId);
+        // Return true if the menu is in the basket, false otherwise
+        console.log("checkInBasket: ", menuIndex !== -1)
+        setMenuSaved(menuIndex !== -1)
+    };
+
+    // useEffect(()=> {
+    //     saveToBasket(menu, quantity)
+    // }, [quantity])
+
+    useEffect(()=>{
+        checkInBasket(menu.id)
+    },[]);
+
+    function renderGalerie({item, index}) {
+        return (
+            <Pressable onPress={() => setChosenImage(item)}  activeOpacity={1} className="mr-4 rounded-lg shadow-sm">
+                <View className={item?.url == chosenImage?.url ? activeImage : mutedImage}>
+                    <Image className="w-full h-full object-cover rounded-lg" source={{uri: item?.url}} />
+                </View>
+            </Pressable>
+        );
+    }
 
   return (
 
@@ -153,12 +195,16 @@ export default function DetailProduit({route, navigation}) {
         </ScrollView>
 
         <View className="w-full h-[80px] bg-[#fefaf9] shadow rounded-t-2xl absolute bottom-0 left-0 z-10 px-6 py-3">
-            <TouchableOpacity onPress={() => setModalVisible(true)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
-                <Text className="text-xl text-white font-semibold self-center">Commander</Text>
-            </TouchableOpacity>
+            {!menuSaved ?
+                <TouchableOpacity onPress={() => saveToBasket(menu, 1)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                    <Text className="text-xl text-white font-semibold self-center">Ajouter au panier</Text>
+                </TouchableOpacity> 
+                :
+                <TouchableOpacity onPress={() => removeFromBasket(menu.id)} className="w-full h-full bg-[#d90000]/90 shadow-lg rounded-2xl flex flex-row justify-center">
+                    <Text className="text-xl text-white font-semibold self-center">Retirer du panier</Text>
+                </TouchableOpacity>
+            }
         </View>
-
-        {getModal()}
 
     </View>
   );

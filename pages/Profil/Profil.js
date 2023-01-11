@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Pressable, Text, View, SafeAreaView, ScrollView, Image } from 'react-native';
-import Styles from '../styles';
-import { Header } from '../components/commons/Header';
+import Styles from '../../styles';
+import { Header } from '../../components/commons/Header';
 import Svg, { Path } from "react-native-Svg";
 
 export default function Profil() {
@@ -74,8 +74,8 @@ export default function Profil() {
 
             <Pressable className="flex flex-row justify-between px-1.5 py-4">
               <Text className="text-[14px] font-semibold">Se déconnecter</Text>
-              <Svg className="w-[12.5px]" xmlns="http://www.w3.org/2000/Svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24">
-                <Path d="M8.127,24l9.507-9.52a3.507,3.507,0,0,0,0-4.948L8.116,0,6,2.121l9.518,9.531a.5.5,0,0,1,0,.707L6.01,21.879Z"/>
+              <Svg className="w-[12.5px]" xmlns="http://www.w3.org/2000/Svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" >
+                <Path  d="M8.127,24l9.507-9.52a3.507,3.507,0,0,0,0-4.948L8.116,0,6,2.121l9.518,9.531a.5.5,0,0,1,0,.707L6.01,21.879Z"/>
               </Svg>
             </Pressable>
 
