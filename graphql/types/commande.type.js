@@ -1,5 +1,3 @@
-// Here is the command Mutation
-
 import { gql, useQuery } from "@apollo/client";
 
 export const SaveCommande = gql`
@@ -25,5 +23,3 @@ export const SaveCommande = gql`
         }
     }
 `;
-
-// Here is the commandeMenus type

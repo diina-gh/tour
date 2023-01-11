@@ -196,7 +196,7 @@ export default function DetailProduit({route, navigation}) {
 
         <View className="w-full h-[80px] bg-[#fefaf9] shadow rounded-t-2xl absolute bottom-0 left-0 z-10 px-6 py-3">
             {!menuSaved ?
-                <TouchableOpacity onPress={() => saveToBasket(menu, 1)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
+                <TouchableOpacity onPress={() => updateConsole(0)} className="w-full h-full bg-[#0b0b0b] shadow-lg rounded-2xl flex flex-row justify-center">
                     <Text className="text-xl text-white font-semibold self-center">Ajouter au panier</Text>
                 </TouchableOpacity> 
                 :
