@@ -12,6 +12,7 @@ import DetailProduit from './pages/Restos/detailProduit';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import DetailPlace from './pages/Places/detailPlace';
+import Panier from './pages/Profil/Panier';
 
 const cache = new InMemoryCache()
 
@@ -21,14 +22,10 @@ const client = new ApolloClient({
   defaultOptions: { watchQuery: { fetchPolicy: 'cache-and-network' } },
 })
 
-
 const Stack = createStackNavigator();
-
 
 export default function App() {
   return (
-
-
     <>
       <ApolloProvider client={client}>
         <TailwindProvider>
@@ -40,6 +37,7 @@ export default function App() {
               <Stack.Screen name="DetailHotel" component={DetailHotel} options={{ headerShown: false }} />
               <Stack.Screen name="DetailResto" component={DetailResto} options={{ headerShown: false }} />
               <Stack.Screen name="DetailProduit" component={DetailProduit} options={{ headerShown: false }} />
+              <Stack.Screen name="Panier" component={Panier} options={{ headerShown: false }} />
               <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
               <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
             </Stack.Navigator>
