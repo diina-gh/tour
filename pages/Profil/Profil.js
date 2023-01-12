@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, Pressable, Text, View, SafeAreaView, ScrollView, Image } from 'react-native';
+import { StyleSheet, Pressable, Text, View, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
 import Styles from '../../styles';
 import { Header } from '../../components/commons/Header';
-import Svg, { Path } from "react-native-Svg";
+import Svg, { G, Path } from "react-native-Svg";
 
 export default function Profil({route, navigation}) {
 
@@ -70,14 +70,26 @@ export default function Profil({route, navigation}) {
               </Svg>
             </Pressable>
 
-            <View className="w-full h-[0.5px] bg-[#cccccc]/80"></View>
+            {/* <View className="w-full h-[0.5px] bg-[#cccccc]/80"></View>
 
             <Pressable className="flex flex-row justify-between px-1.5 py-4 active:bg-[#f4f2ef]/90 active:shadow-inner">
               <Text className="text-[14px] font-semibold">Se déconnecter</Text>
               <Svg className="w-[12.5px]" xmlns="http://www.w3.org/2000/Svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" >
                 <Path  d="M8.127,24l9.507-9.52a3.507,3.507,0,0,0,0-4.948L8.116,0,6,2.121l9.518,9.531a.5.5,0,0,1,0,.707L6.01,21.879Z"/>
               </Svg>
-            </Pressable>
+            </Pressable> */}
+
+            <TouchableOpacity onPress={() => {}}  className="w-full h-[50px] bg-[#f4f2ef] rounded-xl px-4 py-2 mt-6">
+              <View className="w-full h-full rounded-2xl flex flex-row justify-between items-center">
+                <Text className="text-[14px] font-semibold">Se déconnecter</Text>
+                <Svg className="w-[12.5px]" id="Capa_1" viewBox="0 0 512 512" >
+                  <G>
+                    <Path d="M170.698,448H72.757c-4.814-0.012-8.714-3.911-8.725-8.725V72.725c0.012-4.814,3.911-8.714,8.725-8.725h97.941   c17.673,0,32-14.327,32-32s-14.327-32-32-32H72.757C32.611,0.047,0.079,32.58,0.032,72.725v366.549   C0.079,479.42,32.611,511.953,72.757,512h97.941c17.673,0,32-14.327,32-32S188.371,448,170.698,448z"/>
+                    <Path d="M483.914,188.117l-82.816-82.752c-12.501-12.495-32.764-12.49-45.259,0.011s-12.49,32.764,0.011,45.259l72.789,72.768   L138.698,224c-17.673,0-32,14.327-32,32s14.327,32,32,32l0,0l291.115-0.533l-73.963,73.963   c-12.042,12.936-11.317,33.184,1.618,45.226c12.295,11.445,31.346,11.436,43.63-0.021l82.752-82.752   c37.491-37.49,37.491-98.274,0.001-135.764c0,0-0.001-0.001-0.001-0.001L483.914,188.117z"/>
+                  </G>
+                </Svg>
+              </View> 
+            </TouchableOpacity>
 
           </View>
 
