@@ -8,9 +8,9 @@ Our app offers the following services:
 Browse and explore places with detailed descriptions, geolocation and make reservations.
 
 <div style="text-align:center;">
-    <img src="https://github.com/diina-gh/store/blob/main/public/images/app/image2.png" style="width: 30% ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/store/blob/main/public/images/app/image2.png" style="width: 30% ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/store/blob/main/public/images/app/image2.png" style="width: 30% ; display:inline-block;">
+    <img src="https://github.com/diina-gh/store/blob/main/public/images/app/image2.png" style="width: 32% ; display:inline-block; margin-right:20px;">
+    <img src="https://github.com/diina-gh/store/blob/main/public/images/app/image2.png" style="width: 32% ; display:inline-block; margin-right:20px;">
+    <img src="https://github.com/diina-gh/store/blob/main/public/images/app/image2.png" style="width: 32% ; display:inline-block;">
 </div>
 
 
