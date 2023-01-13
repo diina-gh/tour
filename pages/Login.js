@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, StyleSheet, Pressable, Text, TextInput,  View, Image } from 'react-native';
+import { Dimensions, StyleSheet, Pressable, Text, TextInput,  View, Image, ActivityIndicator } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useMutation } from '@apollo/client';
 import { LoginUser } from '../graphql/types/user.type';
@@ -17,7 +17,7 @@ export default function Signin() {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [login, { data }] = useMutation(LoginUser); 
+    const [login, { data, loading, error}] = useMutation(LoginUser); 
   
     const handleSubmit = () => {
         login({ variables: { email, password } })
@@ -42,6 +42,12 @@ export default function Signin() {
 
     return (
         <View style={[Styles.container, styles.fontFamily]} className="relative w-full h-full">
+
+            {loading && (
+                <View className="absolute top-0 left-0 w-full h-full bg-gray-300/50 z-40 items-center justify-center">
+                    <ActivityIndicator size="large" color="#9d9d9d" />
+                </View>        
+            )}
 
             <Image className="w-full h-full object-cover" source={{uri: imageBg}} />
 

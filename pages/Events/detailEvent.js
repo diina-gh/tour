@@ -11,7 +11,7 @@ import { useMutation } from '@apollo/client';
 
 import mapboxgl from '!mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGluYTMyNzUiLCJhIjoiY2xjaHY4dDZ6MDRiNTNwcDZjZnA3dzI2eiJ9.n04NQEJUCUS2svQvRKDx3g';
+mapboxgl.accessToken = 'your.api.key.from.env';
 
 const {width, height } = Dimensions.get("window");
 let mutedImage = "w-14 h-14 self-center bg-gray-800/30 border-2 border-gray-500/30 rounded-lg p-0.5";

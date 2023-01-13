@@ -97,7 +97,7 @@ export default function DetailProduit({route, navigation}) {
 
             <View className="relative w-full h-96 bg-stone-100">
                 
-                <Image className="w-full h-full object-cover" source={{uri: menu?.images[0]?.url}} />
+                <Image className="w-full h-full object-cover" source={{uri: chosenImage?.url}} />
                 
                 <LinearGradient className="absolute top-0 left-0 w-full h-full" colors={['rgba(0, 0, 0, 0)','rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.3)']} >
 
