@@ -6,10 +6,14 @@ Our app offers the following services:
 
 * Places: 
 Browse and explore places with detailed descriptions, geolocation and make reservations.
+![Image](https://github.com/diina-gh/store/blob/main/public/images/app/image2.png)  |  ![Image](https://github.com/diina-gh/store/blob/main/public/images/app/image3.png) | ![Image](https://github.com/diina-gh/store/blob/main/public/images/app/image3.png)
+
 * Hotels: 
 Find the perfect hotel with a list of options, geolocation and reservations.
+
 * Restaurants: 
 Discover new restaurants with a list of options, geolocation and online commands.
+
 * Events: 
 Plan your trip with events descriptions, geolocation and reservations.
 
