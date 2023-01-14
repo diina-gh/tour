@@ -10,7 +10,7 @@ Browse and explore places with detailed descriptions, geolocation and make reser
 <div style="text-align:center;">
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image2.png" style="width: 250px ; display:inline-block; margin-right:10px;">
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image21.png" style="width: 250px ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image22.png" style="width: 250px ; display:inline-block;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image31.png" style="width: 250px ; display:inline-block;">
 
 </div>
 
@@ -20,7 +20,7 @@ Find the perfect hotel with a list of options, geolocation and reservations.
 <div style="text-align:center;">
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image4.png" style="width: 250px ; display:inline-block; margin-right:10px;">
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image5.png" style="width: 250px ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image23.png" style="width: 250px ; display:inline-block;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image32.png" style="width: 250px ; display:inline-block;">
 </div>
 
 ### Restaurants: 
@@ -38,7 +38,7 @@ Plan your trip with events descriptions, geolocation and reservations.
 <div style="text-align:center;">
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image6.png" style="width: 250px ; display:inline-block; margin-right:10px;">
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image24.png" style="width: 250px ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image25.png" style="width: 250px ; display:inline-block;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image33.png" style="width: 250px ; display:inline-block;">
 </div>
 
 ## Getting Started
