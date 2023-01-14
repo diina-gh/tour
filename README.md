@@ -1,6 +1,6 @@
 # Tour
 
-Welcome to Tour, your ultimate mobile guide for discovering new places, hotels, restaurants and events for your next vacation. With our user-friendly interface and extensive list of options, planning your next trip has never been easier.
+Welcome to Tour, your ultimate mobile guide for discovering new places, hotels, restaurants and events in Senegal for your next vacation. With our user-friendly interface and extensive list of options, planning your next trip has never been easier.
 
 Our app offers the following services:
 
