@@ -8,25 +8,25 @@ Our app offers the following services:
 Browse and explore places with detailed descriptions, geolocation and make reservations.
 
 <div style="text-align:center;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image2.png" style="width: 25% ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image3.png" style="width: 25% ; display:inline-block;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image2.png" style="width: 300px ; display:inline-block; margin-right:10px;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image3.png" style="width: 300px ; display:inline-block;">
 </div>
 
 ### Hotels: 
 Find the perfect hotel with a list of options, geolocation and reservations.
 
 <div style="text-align:center;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image4.png" style="width: 30% ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image5.png" style="width: 30% ; display:inline-block;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image4.png" style="width: 300px ; display:inline-block; margin-right:10px;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image5.png" style="width: 300px ; display:inline-block;">
 </div>
 
 ### Restaurants: 
 Discover new restaurants with a list of options, geolocation and online commands.
 
 <div style="text-align:center;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image8.png" style="width: 30% ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image9.png" style="width: 30% ; display:inline-block; margin-right:10px;">
-    <img src="https://github.com/diina-gh/tour/blob/master/assets/image10.png" style="width: 30% ; display:inline-block;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image8.png" style="width: 300px ; display:inline-block; margin-right:10px;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image9.png" style="width: 300px ; display:inline-block; margin-right:10px;">
+    <img src="https://github.com/diina-gh/tour/blob/master/assets/image10.png" style="width: 300px ; display:inline-block;">
 </div>
 
 ### Events: 
