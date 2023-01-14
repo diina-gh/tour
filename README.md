@@ -60,9 +60,6 @@ Run the development server
 * Mapbox - Maps and geolocation services
 * Moment.js - Date and time manipulation
 
-## Contributing
-We welcome contributions to this project. If you have an idea or have found a bug, please open an issue.
-
 ## Authors
 Seydina GUEYE - Initial work
 
