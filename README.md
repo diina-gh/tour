@@ -4,7 +4,7 @@ Welcome to Tour, your ultimate mobile guide for discovering new places, hotels, 
 
 Our app offers the following services:
 
-* Places: 
+### Places: 
 Browse and explore places with detailed descriptions, geolocation and make reservations.
 
 <div style="text-align:center;">
@@ -12,7 +12,7 @@ Browse and explore places with detailed descriptions, geolocation and make reser
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image3.png" style="width: 30% ; display:inline-block;">
 </div>
 
-* Hotels: 
+### Hotels: 
 Find the perfect hotel with a list of options, geolocation and reservations.
 
 <div style="text-align:center;">
@@ -20,7 +20,7 @@ Find the perfect hotel with a list of options, geolocation and reservations.
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image5.png" style="width: 30% ; display:inline-block;">
 </div>
 
-* Restaurants: 
+### Restaurants: 
 Discover new restaurants with a list of options, geolocation and online commands.
 
 <div style="text-align:center;">
@@ -29,7 +29,7 @@ Discover new restaurants with a list of options, geolocation and online commands
     <img src="https://github.com/diina-gh/tour/blob/master/assets/image10.png" style="width: 30% ; display:inline-block;">
 </div>
 
-* Events: 
+### Events: 
 Plan your trip with events descriptions, geolocation and reservations.
 
 <div style="text-align:center;">
