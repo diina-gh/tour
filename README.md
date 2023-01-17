@@ -45,7 +45,7 @@ Plan your trip with events descriptions, geolocation and reservations.
 To run the project on your local machine, you need to have Node.js and the Expo CLI installed.
 
 Clone the repository
-`git clone https://github.com/YOUR_USERNAME/tour.git`
+`git clone https://github.com/diina-gh/tour-react-native`
 
 Install the dependencies
 `npm install`
